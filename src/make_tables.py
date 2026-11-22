@@ -87,6 +87,11 @@ def main():
                        f"{r['Pooled-LR']['vs_tlr']['hi']:+.3f}] vrex d {r['V-REx']['vs_tlr']['delta']:+.3f} \\\\")
     if pairs:
         rows = method_rows(pairs, gnn, out)
+        d = {tuple(k.split("->")): v["LR-T1"]["vs_tdeg"]["delta"] for k, v in pairs.items()}
+        mu, lo, hi = domain_boot(d)
+        up = sum(v["LR-T1"]["vs_tdeg"]["lo"] > 0 for v in pairs.values())
+        down = sum(v["LR-T1"]["vs_tdeg"]["hi"] < 0 for v in pairs.values())
+        out.append(f"% LR-U minus T-Deg: mean {mu:+.3f} [{lo:+.3f}, {hi:+.3f}]; pairs CI>0 {up}, CI<0 {down}")
         a = {k: np.mean([pairs[f"{s}->{t}"]["audit"][k] for s, t in PAIRS if f"{s}->{t}" in pairs])
              for k in ("rep", "rep_test_leak", "rep_train_leak")}
         out.append(f"% audit means over pairs: {a}")
