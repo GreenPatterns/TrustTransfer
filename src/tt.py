@@ -2,16 +2,21 @@
 features, models and paired statistics.
 
 Access contract (one rule for every method). Each graph is sorted by its
-time/order field and cut into equal windows. A *view* of a graph is the triple
+time/order field and cut into equal windows. A *view* of a graph is
 (score edges, observable topology, signed edges whose signs may be read):
 
-  target test view   score [0.2,0.4)  topology [0,0.4)  signs [0,0.2)
-  target fit view    score [0.1,0.2)  topology [0,0.2)  signs [0,0.1)
-  source fit view    score [h/2,h)    topology [0,h)    signs [0,h/2)
+  target test view   score [0.2,0.4)  signs [0,0.2)
+  target fit view    score [0.1,0.2)  signs [0,0.1)
+  source fit view    score [h/2,h)    signs [0,h/2)
 
-No view reads the sign of an edge it scores (tested in test_tt.py).
-Tier 1 features read no signs, Tier 2 features read the view's signed edges,
-and the Tier 3 (leaked) variant adds the scored edges' own signs.
+Topology rule. Forecast (strict, the paper's main rule; *_strict views): each
+scored edge reads only the unsigned edges before its block (rolling G_<t,
+CHUNKS blocks per window). Batch (target_view etc.): every scored edge reads
+all edges up to the window's end, i.e. later ratings of its own window too.
+
+No view reads the sign of an edge it scores, and forecast features do not change
+when later edges are deleted (both tested in test_tt.py). The leaked variant
+(leak=True) adds the scored edges' own signs, for the leakage checks only.
 """
 import os
 from dataclasses import dataclass
@@ -96,6 +101,10 @@ class View:
     score: np.ndarray
     topo: np.ndarray
     signs: np.ndarray
+    rolling: bool = False   # if True, each scored edge reads the topology before itself (G_<t)
+
+
+CHUNKS = 100   # time resolution of rolling views: G_<t is refreshed this many times per window
 
 
 def target_view(g, signs=None):
@@ -134,6 +143,11 @@ def node_sign_stats(g, idx):
 
 
 def features(view, fams=("deg", "topo", "rep"), leak=False):
+    if view.rolling:
+        # scored edges are a contiguous time range; each chunk reads all edges before it
+        signs = np.union1d(view.signs, view.score) if leak else view.signs
+        parts = [p for p in np.array_split(view.score, CHUNKS) if len(p)]
+        return np.concatenate([features(View(view.g, p, np.arange(p[0]), signs), fams) for p in parts])
     g, idx = view.g, view.score
     u, v = g.s[idx], g.d[idx]
     cols = []
@@ -249,3 +263,25 @@ def coral(xs, xt, eps=1.0):
     cs = np.cov(xs, rowvar=False) + eps * np.eye(xs.shape[1])
     ct = np.cov(xt, rowvar=False) + eps * np.eye(xs.shape[1])
     return (xs - xs.mean(0)) @ msqrt(cs, inv=True) @ msqrt(ct) + xt.mean(0)
+
+
+# ---------------------------------------------------------------- strict (forecast) contract
+# Every scored edge reads only the unsigned edges that precede it (rolling G_<t, refreshed
+# CHUNKS times per window) and the signs of an earlier window; target features are scaled
+# with statistics of the target's training window, never the test window.
+def target_view_strict(g, signs=None):
+    return View(g, g.win(0.2, 0.4), g.win(0.0, 0.2), g.win(0.0, 0.2) if signs is None else signs, True)
+
+
+def target_fit_view_strict(g, signs=None):
+    return View(g, g.win(0.1, 0.2), g.win(0.0, 0.1), g.win(0.0, 0.1) if signs is None else signs, True)
+
+
+def source_view_strict(g, h=1.0):
+    return View(g, g.win(h / 2, h), g.win(0.0, h / 2), g.win(0.0, h / 2), True)
+
+
+def zscore_ref(x, ref):
+    """Standardise x with the mean and spread of a reference (training) matrix."""
+    mu, sd = ref.mean(0), ref.std(0)
+    return (x - mu) / np.where(sd > 0, sd, 1.0)

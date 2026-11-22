@@ -1,0 +1,70 @@
+[
+  {
+    "source": "otc",
+    "target": "epinions",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.7516304809277212,
+    "auc_std": 0.03300128686180401,
+    "mcc_mean": 0.22056894448903722,
+    "f1_mean": 0.8894002480327202,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 481.4
+  },
+  {
+    "source": "otc",
+    "target": "epinions",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.45855360334429557,
+    "auc_std": 0.021445330837902957,
+    "mcc_mean": -0.07055156487983706,
+    "f1_mean": 0.6931294404374607,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 481.4
+  },
+  {
+    "source": "alpha",
+    "target": "epinions",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.751515385080633,
+    "auc_std": 0.011710316646906497,
+    "mcc_mean": 0.3192742455937187,
+    "f1_mean": 0.8719434444762993,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 658.8
+  },
+  {
+    "source": "alpha",
+    "target": "epinions",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.462372694002722,
+    "auc_std": 0.05961312902061234,
+    "mcc_mean": -0.06879831775235548,
+    "f1_mean": 0.731751228886445,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 658.8
+  }
+]

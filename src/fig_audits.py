@@ -1,7 +1,9 @@
-"""Fig. 2: the three leakage audits. (a) receiver-reputation rule with and
+"""Fig. 2: the four leakage checks. (a) receiver-reputation rule with and
 without the scored edges' signs; (b) transferred reputation block, clean vs
 leaky source vs leaky target features, mean over the five sources of each
-target; (c) node-index prior under three numberings and within age deciles."""
+target; (c) node-index prior under three numberings and within age deciles;
+(d) target-only LR when test ratings may read later unsigned ratings (batch)
+or only earlier ones (forecast)."""
 import numpy as np
 
 from plot_style import C_LEAK, C_REF, SHORT, WIDTH, load, panel, plt, save
@@ -10,9 +12,10 @@ import tt
 
 def main():
     targets, pairs, data = load("targets.json"), load("transfer.json"), load("data_audit.json")
+    strict = load("strict/targets.json")
     g = tt.GRAPHS
     x = np.arange(len(g))
-    fig, axes = plt.subplots(1, 3, figsize=(WIDTH, 1.6), gridspec_kw={"width_ratios": [1, 1.15, 1.35]})
+    fig, axes = plt.subplots(1, 4, figsize=(WIDTH, 1.6), gridspec_kw={"width_ratios": [1, 1.12, 1.3, 1]})
 
     ax = axes[0]
     corr = [targets[t]["T-rep"]["auc"] for t in g]
@@ -38,15 +41,20 @@ def main():
         ax.bar(x + (k - 1.5) * 0.2, [rows[t][key] for t in g], 0.2, color=col, label=lab)
     panel(ax, "c", "tr")
 
+    ax = axes[3]
+    ax.bar(x - 0.2, [targets[t]["T-LR"]["auc"] for t in g], 0.4, color=C_LEAK, label="batch")
+    ax.bar(x + 0.2, [strict[t]["T-LR"]["auc"] for t in g], 0.4, color="#bbbbbb", label="forecast")
+    panel(ax, "d", "tr")
+
     for ax in axes:
         ax.axhline(0.5, color="k", lw=0.5, ls=":")
         ax.set_ylim(0.25 if ax is axes[2] else 0.4, 1.0)
         ax.set_xticks(x, [SHORT[t] for t in g], rotation=45, ha="right")
         n = len(ax.get_legend_handles_labels()[0])
-        ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2 if n != 3 else 3,
+        ax.legend(frameon=False, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2,
                   handlelength=0.9, columnspacing=0.6, handletextpad=0.3, fontsize=5.6, labelspacing=0.15,
                   borderaxespad=0.1)
-    fig.tight_layout(pad=0.2, w_pad=0.8)
+    fig.tight_layout(pad=0.2, w_pad=0.5)
     save(fig, "audits")
 
 

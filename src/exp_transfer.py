@@ -13,16 +13,25 @@ import numpy as np
 import deep
 import tt
 
-CACHE = os.path.join(tt.RESULTS, "cache")
+# Contract: "batch" (default; test-window topology observable, signs hidden) or
+# "strict" (forecast: every scored edge reads topology and signs only from windows
+# before its own, and target features are scaled with prefix statistics).
+STRICT = os.environ.get("TT_CONTRACT", "batch") == "strict"
+CACHE = os.path.join(tt.RESULTS, "cache_strict" if STRICT else "cache")
+OUT = os.path.join(tt.RESULTS, "strict") if STRICT else tt.RESULTS
 ALL = tt.family_cols(("deg", "topo", "rep"))
 TIER1 = tt.family_cols(("deg", "topo"))
 REP = tt.family_cols(("rep",))
-HS = (0.2, 0.5, 0.8, 1.0)
+HS = (1.0,) if STRICT else (0.2, 0.5, 0.8, 1.0)
 SEEDS = (0, 1, 2)
 B = 300
 
 
 def views(g):
+    if STRICT:
+        out = {"test": tt.target_view_strict(g), "tfit": tt.target_fit_view_strict(g)}
+        out.update({f"src{h}": tt.source_view_strict(g, h) for h in HS})
+        return out
     out = {"test": tt.target_view(g), "tfit": tt.target_fit_view(g)}
     out.update({f"src{h}": tt.source_view(g, h) for h in HS})
     return out
@@ -51,6 +60,19 @@ def zs(x, cols):
     return tt.zscore(x[:, cols])
 
 
+def zt(c, cols):
+    """Scaled target test matrix: batch scales by the test edges' own (unlabeled)
+    values; strict scales by the target's training-window values (prefix only)."""
+    if STRICT:
+        return tt.zscore_ref(c["test_x"][:, cols], c["tfit_x"][:, cols])
+    return zs(c["test_x"], cols)
+
+
+def zu(c, cols):
+    """Unlabeled target sample used for adaptation (CORAL, DANN)."""
+    return zs(c["tfit_x"], cols) if STRICT else zs(c["test_x"], cols)
+
+
 def ensemble(scores):
     return np.mean([tt.zscore(s[:, None])[:, 0] for s in scores], 0)
 
@@ -66,8 +88,8 @@ def summarise(score, y, ref, raters, seed=0):
 def target_refs(t):
     c = cached(t)
     x, y, r = c["test_x"], c["test_y"], c["test_r"]
-    t_lr = tt.fit_predict("lr", zs(c["tfit_x"], ALL), c["tfit_y"], zs(x, ALL))
-    t_gbdt = tt.fit_predict("gbdt", zs(c["tfit_x"], ALL), c["tfit_y"], zs(x, ALL))
+    t_lr = tt.fit_predict("lr", zs(c["tfit_x"], ALL), c["tfit_y"], zt(c, ALL))
+    t_gbdt = tt.fit_predict("gbdt", zs(c["tfit_x"], ALL), c["tfit_y"], zt(c, ALL))
     refs = {"T-deg": x[:, 3], "T-rep": x[:, 13], "T-LR": t_lr, "T-GBDT": t_gbdt,
             "T-rep-leaked": c["test_leak_x"][:, 5]}
     rows = {k: summarise(s, y, None, r) for k, s in refs.items()}
@@ -102,13 +124,16 @@ def pair_run(s, t, t_lr):
     cs, ct = cached(s), cached(t)
     xs, ys = cs["src1.0_x"], cs["src1.0_y"]
     xt, yt, rt = ct["test_x"], ct["test_y"], ct["test_r"]
-    sc = {"LR-T1": source_model(s, "lr", cols=TIER1)(zs(xt, TIER1)),
-          "LR": source_model(s, "lr")(zs(xt, ALL)),
-          "GBDT": source_model(s, "gbdt")(zs(xt, ALL)),
-          "CORAL": tt.fit_predict("coral", zs(xs, ALL), ys, zs(xt, ALL)),
-          "DANN": ensemble([deep.dann(zs(xs, ALL), ys, zs(xt, ALL), sd) for sd in SEEDS])}
+    xa, xu = zt(ct, ALL), zu(ct, ALL)
+    sc = {"LR-T1": source_model(s, "lr", cols=TIER1)(zt(ct, TIER1)),
+          "LR": source_model(s, "lr")(xa),
+          "GBDT": source_model(s, "gbdt")(xa),
+          "CORAL": tt.fit_predict("lr", tt.coral(zs(xs, ALL), xu), ys, xa),
+          "DANN": ensemble([deep.dann(zs(xs, ALL), ys, xu, sd, x_pred=xa) for sd in SEEDS])}
     rows = {k: summarise(v, yt, t_lr, rt) for k, v in sc.items()}
     rows["LR-T1"]["vs_tdeg"] = tt.paired_delta(sc["LR-T1"], xt[:, 3], yt, rt, b=B)
+    if STRICT:
+        return rows
     # leakage audits on the reputation block (LR, full source history)
     rep = source_model(s, "lr", cols=REP)
     rows["audit"] = {
@@ -131,15 +156,16 @@ def multi_source(t, t_lr):
     w = np.concatenate([np.full(len(e[1]), 1.0 / len(e[1])) for e in envs])
     from sklearn.linear_model import LogisticRegression
     pooled = LogisticRegression(max_iter=2000, class_weight="balanced").fit(
-        x, y, sample_weight=w * len(y)).decision_function(zs(xt, ALL))
-    vr = ensemble([deep.vrex(envs, zs(xt, ALL), sd) for sd in SEEDS])
+        x, y, sample_weight=w * len(y)).decision_function(zt(ct, ALL))
+    vr = ensemble([deep.vrex(envs, zt(ct, ALL), sd) for sd in SEEDS])
     return {"Pooled-LR": summarise(pooled, yt, t_lr, rt), "V-REx": summarise(vr, yt, t_lr, rt)}
 
 
 if __name__ == "__main__":
     graphs = sys.argv[1:] or tt.GRAPHS
-    out_t = os.path.join(tt.RESULTS, "targets.json")
-    out_p = os.path.join(tt.RESULTS, "transfer.json")
+    os.makedirs(OUT, exist_ok=True)
+    out_t = os.path.join(OUT, "targets.json")
+    out_p = os.path.join(OUT, "transfer.json")
     targets = json.load(open(out_t)) if os.path.exists(out_t) else {}
     pairs = json.load(open(out_p)) if os.path.exists(out_p) else {}
     for t in graphs:

@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import SAGEConv
+from torch_geometric.nn import SAGEConv, SignedConv
 
 import tt
 
@@ -37,8 +37,9 @@ class _GradReverse(torch.autograd.Function):
         return -ctx.lam * g, None
 
 
-def dann(xs, ys, xt, seed, steps=1500, bs=2048):
-    """Ganin et al. 2016: shared encoder, label head, adversarial domain head."""
+def dann(xs, ys, xt, seed, steps=1500, bs=2048, x_pred=None):
+    """Ganin et al. 2016: shared encoder, label head, adversarial domain head.
+    xt is the unlabeled target sample; x_pred (default xt) is scored."""
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
     enc, head = _mlp(xs.shape[1]).to(DEV), nn.Linear(H, 1).to(DEV)
@@ -56,7 +57,7 @@ def dann(xs, ys, xt, seed, steps=1500, bs=2048):
         loss.backward()
         opt.step()
     with torch.no_grad():
-        return head(enc(xt_t)).squeeze(1).cpu().numpy()
+        return head(enc(xt_t if x_pred is None else _t(x_pred))).squeeze(1).cpu().numpy()
 
 
 def vrex(envs, xt, seed, steps=1500, bs=2048, beta=10.0, warmup=300):
@@ -81,8 +82,10 @@ def vrex(envs, xt, seed, steps=1500, bs=2048, beta=10.0, warmup=300):
 
 
 # ------------------------------------------------------------------ GNN
-def graph_inputs(view):
-    """Node features and six relations from what the view may observe."""
+def graph_inputs(view, ef=None, active_only=False):
+    """Node features and six relations from what the view may observe. ef: scaled edge
+    features for view.score (default: computed here, scaled by their own values).
+    active_only: scale node features over nodes active in the view's topology (strict)."""
     g = view.g
     out = np.bincount(g.s[view.topo], minlength=g.n)
     inn = np.bincount(g.d[view.topo], minlength=g.n)
@@ -97,9 +100,18 @@ def graph_inputs(view):
         rels += [np.stack([s, d]), np.stack([d, s])]
     ei = [torch.as_tensor(r, dtype=torch.long, device=DEV) for r in rels]
     e = view.score
-    return {"x": _t(tt.zscore(x)), "ei": ei, "u": torch.as_tensor(g.s[e], device=DEV),
-            "v": torch.as_tensor(g.d[e], device=DEV), "ef": _t(tt.zscore(tt.features(view))),
-            "y": _t(g.y[e])}
+    x = tt.zscore_ref(x, x[(out + inn) > 0]) if active_only else tt.zscore(x)
+    return {"x": _t(x), "ei": ei, "u": torch.as_tensor(g.s[e], device=DEV),
+            "v": torch.as_tensor(g.d[e], device=DEV),
+            "ef": _t(tt.zscore(tt.features(view)) if ef is None else ef), "y": _t(g.y[e])}
+
+
+def snapshots(view, ef, k=10):
+    """Rolling view as k graph snapshots: each block of scored edges sees the edges
+    before the block (G_<t refreshed k times per window), node scaling over active nodes."""
+    parts = np.array_split(np.arange(len(view.score)), k)
+    return [graph_inputs(tt.View(view.g, view.score[p], np.arange(view.score[p[0]]), view.signs),
+                         ef=ef[p], active_only=True) for p in parts if len(p)]
 
 
 class Encoder(nn.Module):
@@ -117,10 +129,27 @@ class Encoder(nn.Module):
         return h
 
 
-class EdgeModel(nn.Module):
-    def __init__(self, d_edge=15):
+class SignedEncoder(nn.Module):
+    """SGCN (Derr et al. 2018): balanced and unbalanced signed convolutions over the
+    revealed signed edges (both directions), tanh activations as in the original."""
+    def __init__(self, d_in=8, layers=2):
         super().__init__()
-        self.enc = Encoder()
+        self.inp = nn.Linear(d_in, H)
+        self.convs = nn.ModuleList([SignedConv(H, H // 2, first_aggr=True)] +
+                                   [SignedConv(H // 2, H // 2, first_aggr=False) for _ in range(layers - 1)])
+
+    def forward(self, x, ei):
+        pos, neg = torch.cat([ei[2], ei[3]], 1), torch.cat([ei[4], ei[5]], 1)
+        h = torch.tanh(self.inp(x))
+        for conv in self.convs:
+            h = torch.tanh(conv(h, pos, neg))
+        return h
+
+
+class EdgeModel(nn.Module):
+    def __init__(self, d_edge=15, kind="rgnn"):
+        super().__init__()
+        self.enc = SignedEncoder() if kind == "sgcn" else Encoder()
         self.dec = nn.Sequential(nn.Linear(2 * H + d_edge, H), nn.ReLU(), nn.Linear(H, 1))
 
     def forward(self, gi, idx=None):
@@ -151,21 +180,29 @@ def dgi_pretrain(enc, graphs, seed, steps=200, sample=20000):
         opt.step()
 
 
-def gnn(train_gi, test_gis, seed, pretrain=None, steps=300, bs=8192):
-    """Train on one view's scored edges, score each test view's edges."""
+def _parts(gi):
+    return gi if isinstance(gi, list) else [gi]
+
+
+def gnn(train_gi, test_gis, seed, pretrain=None, steps=300, bs=8192, kind="rgnn"):
+    """Train on one view's scored edges, score each test view's edges. A view is one
+    graph input or a list of snapshots (strict contract); each step uses one snapshot."""
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
-    model = EdgeModel().to(DEV)
+    model = EdgeModel(kind=kind).to(DEV)
     if pretrain:
         dgi_pretrain(model.enc, pretrain, seed)
     opt = torch.optim.Adam(model.parameters(), lr=3e-3)
-    m = len(train_gi["y"])
+    parts = _parts(train_gi)
+    size = np.array([len(p["y"]) for p in parts], dtype=float)
     for _ in range(steps):
+        part = parts[rng.choice(len(parts), p=size / size.sum())] if len(parts) > 1 else parts[0]
+        m = len(part["y"])
         idx = torch.as_tensor(rng.integers(0, m, min(bs, m)), device=DEV)
-        loss = _balanced_bce(model(train_gi, idx), train_gi["y"][idx])
+        loss = _balanced_bce(model(part, idx), part["y"][idx])
         opt.zero_grad()
         loss.backward()
         opt.step()
     model.eval()
     with torch.no_grad():
-        return [model(gi).cpu().numpy() for gi in test_gis]
+        return [np.concatenate([model(p).cpu().numpy() for p in _parts(gi)]) for gi in test_gis]

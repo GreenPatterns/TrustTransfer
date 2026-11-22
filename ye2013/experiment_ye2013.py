@@ -38,6 +38,8 @@ from sklearn.tree import DecisionTreeClassifier
 from ye_data import RESULTS_ROOT, load_dataset
 
 SEEDS = (42, 123, 456)
+# NMTF covers the CAP highest-degree nodes (default 3000; YE_CAP=30000 is the coverage check)
+CAP = int(os.environ.get("YE_CAP", "3000"))
 K_LATENT = 20
 N_BOOST = 15
 BETWEENNESS_SAMPLES = 200  # pivot sample for approximate betweenness
@@ -234,7 +236,7 @@ def run_pair(source, target, seed, use_latent=True):
         # NMTF on dense blocks is infeasible at Epinions scale; restrict the
         # factorization to the top-degree induced subgraph and back off to
         # zeros for nodes outside it.
-        cap = 3000
+        cap = CAP
         s_keep = np.argsort(-np.asarray(As.sum(1)).ravel())[:cap]
         t_keep = np.argsort(-np.asarray(At.sum(1)).ravel())[:cap]
         Asd = np.asarray(As[s_keep][:, s_keep].todense(), dtype=np.float64)
@@ -272,6 +274,9 @@ def run_pair(source, target, seed, use_latent=True):
 
 PAIRS = [("otc", "alpha"), ("alpha", "otc"), ("otc", "epinions"),
          ("alpha", "epinions"), ("otc", "wikirfa"), ("alpha", "wikirfa")]
+if os.environ.get("YE_PAIRS"):   # e.g. YE_PAIRS=otc-epinions,alpha-epinions
+    PAIRS = [tuple(p.split("-")) for p in os.environ["YE_PAIRS"].split(",")]
+OUT_NAME = "ye2013_transfer.json" if CAP == 3000 else f"ye2013_transfer_cap{CAP}.json"
 
 if __name__ == "__main__":
     d = os.path.join(RESULTS_ROOT, "ye2013")
@@ -300,6 +305,6 @@ if __name__ == "__main__":
             all_rows.append(row)
             print(f"{s+'->'+t:<20}{m:<20}{row['auc_mean']:>8.3f}"
                   f"{row['mcc_mean']:>8.3f}{row['f1_mean']:>8.3f}{maj:>8.3f}")
-    with open(os.path.join(d, "ye2013_transfer.json"), "w") as f:
+    with open(os.path.join(d, OUT_NAME), "w") as f:
         json.dump(all_rows, f, indent=2)
-    print(f"\nSaved: {os.path.join(d, 'ye2013_transfer.json')}")
+    print(f"\nSaved: {os.path.join(d, OUT_NAME)}")

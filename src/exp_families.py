@@ -26,15 +26,16 @@ def main():
     for t in tt.GRAPHS:
         ct = E.cached(t)
         y = ct["test_y"]
-        out["target_only"][t] = {g: tt.auc(fit(E.zs(ct["tfit_x"], c), ct["tfit_y"]).decision_function(E.zs(ct["test_x"], c)), y)
+        out["target_only"][t] = {g: tt.auc(fit(E.zs(ct["tfit_x"], c), ct["tfit_y"]).decision_function(E.zt(ct, c)), y)
                                  for g, c in cols.items()}
         for s in tt.GRAPHS:
             if s != t:
-                out["pairs"][f"{s}->{t}"] = {g: tt.auc(models[(s, g)].decision_function(E.zs(ct["test_x"], c)), y)
+                out["pairs"][f"{s}->{t}"] = {g: tt.auc(models[(s, g)].decision_function(E.zt(ct, c)), y)
                                              for g, c in cols.items()}
         print(t, {g: round(np.mean([out["pairs"][f"{s}->{t}"][g] for s in tt.GRAPHS if s != t]), 3) for g in cols},
               "target-only", {g: round(v, 3) for g, v in out["target_only"][t].items()}, flush=True)
-    json.dump(out, open(os.path.join(tt.RESULTS, "families.json"), "w"), indent=1)
+    os.makedirs(E.OUT, exist_ok=True)
+    json.dump(out, open(os.path.join(E.OUT, "families.json"), "w"), indent=1)
 
 
 if __name__ == "__main__":

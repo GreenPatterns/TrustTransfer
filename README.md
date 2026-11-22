@@ -4,9 +4,17 @@ Code, data scripts and stored results for the paper *Identity-Free Cross-Platfor
 
 The study asks when a model that predicts trust (+) or distrust (−) ratings, trained
 on one platform, helps a new platform that shares no users with it. Every method
-follows one access contract (which ratings it may read). Every transferred model is
-compared, on the same test ratings, with a model trained only on the new platform's
-first 20% of ratings.
+follows one access contract (which ratings and signs it may read). Every transferred
+model is compared, on the same test ratings, with a model trained only on the new
+platform's first 20% of ratings.
+
+**Two access rules.** Under the *forecast* rule (the paper's main results), each
+scored rating reads only the unsigned ratings made before it (rolling G_<t, refreshed
+100 times per window) and target features are scaled with statistics of the target's
+training window. Under the *batch* rule, a scored rating also sees that later ratings
+of its window exist (Check 4 in the paper). Every experiment script reads the
+environment variable `TT_CONTRACT`: `strict` for the forecast rule (outputs in
+`results/strict/`), unset for the batch rule (outputs in `results/`).
 
 ## Contents
 
@@ -14,11 +22,11 @@ first 20% of ratings.
 |------|---------------|
 | `prepare_data.py` | Downloads the six networks from Stanford SNAP and rebuilds the exact inputs |
 | `src/tt.py` | Data loading, the access contract (views), features, AUC, paired bootstrap |
-| `src/deep.py` | DANN, V-REx, inductive relational GNN, Deep Graph Infomax pretraining |
+| `src/deep.py` | DANN, V-REx, inductive relational GNN, SGCN, Deep Graph Infomax pretraining |
 | `src/exp_*.py` | One script per experiment; each writes JSON to `results/` |
 | `src/make_tables.py` | Prints every number in the paper's tables and text to `results/tables.txt` |
 | `src/fig_*.py`, `src/plot_style.py` | Draw Figures 2–5 into `figures/`; Figure 1's TikZ sources are in `figures/` too |
-| `src/test_tt.py` | Leakage unit tests: flipping a scored label must change no feature |
+| `src/test_tt.py` | Leakage unit tests: flipping a scored label changes no feature; deleting later ratings changes no forecast feature |
 | `ye2013/` | Rebuild of Ye et al. (WWW 2013), the closest prior method |
 | `results/` | Stored outputs of every experiment, so tables and figures regenerate in seconds |
 | `run_all.sh` | Runs the whole pipeline in order |
@@ -54,9 +62,9 @@ Reddit hyperlinks (Kumar et al., WWW 2018).
 
 ```bash
 cd src
-python -m pytest -q test_tt.py      # 5 leakage and correctness tests
+python -m pytest -q test_tt.py      # 8 leakage and correctness tests
 python make_tables.py               # rewrites results/tables.txt from the stored JSON
-python fig_audits.py && python fig_targets.py && python fig_transfer.py && python fig_controls.py
+python fig_audits.py && python fig_targets.py && python fig_transfer.py && python fig_fewshot.py
 ```
 
 ## Full reproduction
@@ -67,14 +75,14 @@ bash run_all.sh
 
 | Paper element | Script (in `src/` unless noted) | Output in `results/` | Approx. time |
 |---------------|--------------------------------|----------------------|--------------|
-| Table 1, Fig. 2c, Check 3 | `exp_data.py` | `data_audit.json` | 30 s |
+| Table 2, Fig. 2c, Checks 3–4 data facts | `exp_data.py` | `data_audit.json` | 1 min |
 | Check 2 (construction choices) | `exp_construction.py` | `construction.json` | 1 min |
-| Table 2, Figs. 2a–b, 3, 4a, 5b, Table 4 | `exp_transfer.py` | `transfer.json`, `targets.json` | 2–3 h |
-| GNN and GNN+DGI rows, T-GNN | `exp_gnn.py` | `gnn.json` | 1 h (GPU) |
-| Table 3 (transfer AUC per pair and feature group) | `exp_families.py` | `families.json` | 10 min |
-| Fig. 4b (label budget) | `exp_budget.py` | `budget.json` | 30 min |
-| Fig. 5a (positive control) | `exp_control.py 0.4`, `exp_control.py` | `control_h0.4.json`, `control.json` | 30 min each |
-| Table 5 (Ye et al.) | `ye2013/experiment_ye2013.py` | `ye2013/ye2013_transfer.json` | several hours |
+| Table 3, Figs. 2a–b, 2d, 3, 5a, Table 5 | `exp_transfer.py` (both rules) | `[strict/]transfer.json`, `[strict/]targets.json` | 2–3 h each |
+| GNN, GNN+DGI, SGCN rows; T-GNN, T-SGCN | `exp_gnn.py GNN,GNN-DGI,SGCN gnn.json` | `[strict/]gnn.json` (batch SGCN: `sgcn.json`) | 1–2 h (GPU) |
+| Table 4 (transfer AUC per pair and feature group) | `exp_families.py` | `[strict/]families.json` | 10 min |
+| Fig. 4 (few-shot, fixed negative-label budgets) | `exp_fewshot.py [target ...]` | `[strict/]fewshot.json` | 1–3 h per target |
+| Fig. 5b (positive control) | `exp_control.py 0.4`, `exp_control.py` | `[strict/]control_h0.4.json`, `[strict/]control.json` | 30 min each |
+| Sec. 4.5 (Ye et al., adapted) | `ye2013/experiment_ye2013.py` (`YE_CAP=30000` for the coverage check) | `ye2013/ye2013_transfer[_cap30000].json` | several hours |
 | All numbers | `make_tables.py` | `tables.txt` | seconds |
 | Figures 2–5 | `fig_*.py` | `../figures/*.pdf` | seconds |
 
@@ -89,6 +97,8 @@ third decimal.
 - Rerunning `exp_data.py` and `exp_construction.py` from freshly downloaded data gives
   JSON identical to the stored results, and the features of every target test set are
   bit-identical to those used for the paper.
+- `make_tables.py`, run in this repository from the stored JSON, reproduces
+  `results/tables.txt` exactly as used for the paper, and all 8 unit tests pass.
 
 ## License
 

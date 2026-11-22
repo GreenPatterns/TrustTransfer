@@ -52,6 +52,29 @@ def audit(name):
         h = tt.load(name, ids=ids, seed=0)
         prior = -(h.s[test] + h.d[test]).astype(float)
         row[f"id_prior_auc_{ids}"] = tt.auc(prior, y)
+    # label shift and cold start between the prefix and the test window (second-round review A.3, A.4)
+    pre = g.win(0, 0.2)
+    active = np.zeros(g.n, bool)
+    active[g.s[pre]] = active[g.d[pre]] = True
+    rated = np.zeros(g.n, bool)
+    rated[g.s[pre]] = True
+    row.update({"neg_rate_prefix": float(1 - g.y[pre].mean()), "neg_rate_fit": float(1 - g.y[g.win(0.1, 0.2)].mean()),
+                "neg_rate_test": float(1 - y.mean()), "neg_fit_window": int((g.y[g.win(0.1, 0.2)] == 0).sum()),
+                "test_rater_active_in_prefix": float(active[u].mean()),
+                "test_receiver_active_in_prefix": float(active[v].mean()),
+                "test_rater_rated_in_prefix": float(rated[u].mean())})
+    # where does an id signal come from? negative share of received ratings per id decile
+    dec = np.minimum(np.arange(g.n) * 10 // g.n, 9)
+    neg_in = np.bincount(g.d, weights=1 - g.y, minlength=g.n)
+    deg_in = np.bincount(g.d, minlength=g.n)
+    row["recv_neg_share_by_id_decile"] = [float(neg_in[dec == k].sum() / max(deg_in[dec == k].sum(), 1))
+                                          for k in range(10)]
+    top = (dec == 9) & (deg_in > 0)
+    first_t = np.full(g.n, np.inf)
+    np.minimum.at(first_t, g.d, g.t.astype(float))
+    row["top_id_decile_first_received_min_t"] = float(first_t[top].min())
+    row["top_id_decile_raw_id_min"] = float(np.unique(np.r_[raw["s"].to_numpy(), raw["d"].to_numpy()])[dec == 9].min()) \
+        if np.issubdtype(raw["s"].to_numpy().dtype, np.number) else None
     prior = -(u + v).astype(float)
     row["id_prior_auc_within_receiver_age"] = stratified_auc(prior, y, deciles(first[v]))
     indeg = np.bincount(g.d[g.win(0, 0.4)], minlength=g.n)

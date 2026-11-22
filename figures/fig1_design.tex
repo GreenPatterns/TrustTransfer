@@ -20,19 +20,20 @@
 \draw[decorate, decoration={brace, amplitude=3pt}, black!70] (6.62,0.52) -- (8.38,0.52)
   node[midway, above=2pt, font=\tiny] {first 20\%, signs readable};
 % ---------------- models and comparison
-\node[box, minimum width=4.4cm] (f) at (2.6,-0.95)
-  {\textbf{transfer model} trained on the source\\LR, GBDT, CORAL, DANN, pooled LR,\\V-REx, GNN, GNN+DGI (identity-free)};
+\node[box, minimum width=4.2cm] (f) at (2.5,-1.0)
+  {\textbf{transfer model} trained on the source:\\LR-U, LR, GBDT, CORAL, DANN,\\GNN, GNN+DGI, SGCN; pooled LR\\and V-REx learn from five sources};
 \node[box, minimum width=2.6cm] (tlr) at (7.55,-0.95) {\textbf{T-LR}: same features,\\trained on target's first 20\%};
 \node[box] (cmp) at (9.0,-1.85)
   {\textbf{paired} $\Delta$AUC $=$ AUC(transfer) $-$ AUC(T-LR)\\on the same test edges; rater bootstrap};
 \draw[->] (3.6,-0.2) -- node[right, font=\tiny] {train} (3.6,-0.5);
 \draw[->] (7.95,-0.2) -- node[right, font=\tiny] {train} (7.95,-0.6);
 \draw[->] (9.75,-0.2) -- node[right, font=\tiny, align=left] {score} (9.75,-1.48);
-\draw[->] (f.south) |- node[pos=0.72, below, font=\tiny, align=center] {applied to target features\\(first-20\% signs only, no retraining)} (cmp.west);
+\draw[->] (f.south) |- node[pos=0.62, below, font=\tiny, align=center] {applied to target features;\\few-shot variants also use target labels} (cmp.west);
 \draw[->] (tlr.south) -- (tlr.south |- cmp.north);
 % ---------------- audited leaks
 \node[leak] at (4.8,0.46) {2};
 \node[leak] at (10.2,0.46) {1};
+\node[leak] at (9.3,-0.14) {4};
 \draw[red!75!black, dashed] (4.95,0.23) -- (6.45,0.23);
 \node[leak, fill=white] at (5.7,0.23) {3};
 \end{tikzpicture}

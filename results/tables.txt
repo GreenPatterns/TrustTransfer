@@ -1,77 +1,223 @@
-% graph | nodes | edges | pos | neg prefix | id-prior sorted / first-seen / random | within-age
-OTC & 5,881 & 35,592 & 0.90 & 147 & 0.65 & 0.65 & 0.53 & 0.48 & rho=1.00 \\
-Alpha & 3,783 & 24,186 & 0.94 & 76 & 0.84 & 0.49 & 0.47 & 0.82 & rho=0.33 \\
-Epin. & 131,828 & 841,372 & 0.85 & 45,685 & 0.48 & 0.48 & 0.50 & 0.32 & rho=1.00 \\
-Slash. & 82,140 & 549,202 & 0.77 & 21,091 & 0.54 & 0.54 & 0.50 & 0.51 & rho=0.81 \\
-RfA & 10,595 & 170,499 & 0.78 & 6,540 & 0.61 & 0.54 & 0.48 & 0.61 & rho=-0.75 \\
-Reddit & 67,180 & 858,488 & 0.90 & 16,753 & 0.51 & 0.39 & 0.52 & 0.51 & rho=0.03 \\
-% target refs: T-deg T-rep T-LR T-GBDT T-GNN Pooled V-REx | T-rep leaked | neg rate
-OTC & 0.619 & 0.581 & 0.779 & 0.652 & 0.636 & 0.669 & 0.639 & leak 0.912 & neg 0.063 & pooled d -0.109 [-0.164,-0.065] vrex d -0.140 \\
-Alpha & 0.588 & 0.538 & 0.732 & 0.592 & 0.462 & 0.669 & 0.697 & leak 0.897 & neg 0.030 & pooled d -0.063 [-0.116,-0.009] vrex d -0.035 \\
-Epin. & 0.665 & 0.853 & 0.893 & 0.877 & 0.950 & 0.858 & 0.853 & leak 0.927 & neg 0.174 & pooled d -0.036 [-0.049,-0.026] vrex d -0.040 \\
-Slash. & 0.525 & 0.678 & 0.731 & 0.666 & 0.805 & 0.655 & 0.626 & leak 0.826 & neg 0.238 & pooled d -0.075 [-0.088,-0.061] vrex d -0.104 \\
-RfA & 0.654 & 0.503 & 0.731 & 0.730 & 0.716 & 0.641 & 0.599 & leak 0.886 & neg 0.233 & pooled d -0.090 [-0.104,-0.076] vrex d -0.132 \\
-Reddit & 0.421 & 0.572 & 0.760 & 0.766 & 0.767 & 0.645 & 0.583 & leak 0.677 & neg 0.095 & pooled d -0.116 [-0.144,-0.094] vrex d -0.177 \\
-% method | mean AUC | mean dAUC vs T-LR [domain CI] | pairs CI>0 | pairs CI<0
-LR-T1 & 0.565 & -0.206 [-0.299, -0.114] & 1 & 28 \\
-LR & 0.617 & -0.154 [-0.217, -0.078] & 2 & 28 \\
-GBDT & 0.591 & -0.180 [-0.249, -0.121] & 0 & 28 \\
-CORAL & 0.612 & -0.159 [-0.226, -0.079] & 2 & 28 \\
-DANN & 0.608 & -0.163 [-0.241, -0.087] & 2 & 28 \\
-GNN & 0.613 & -0.158 [-0.230, -0.087] & 0 & 27 \\
-GNN-DGI & 0.628 & -0.143 [-0.227, -0.070] & 1 & 27 \\
-% LR-U minus T-Deg: mean -0.013 [-0.073, +0.065]; pairs CI>0 8, CI<0 8
-% audit means over pairs: {'rep': 0.5684348252675748, 'rep_test_leak': 0.7311095309556305, 'rep_train_leak': 0.674685539860253}
-% history h=0.2: AUC 0.579  d vs T-LR -0.192
-% history h=0.5: AUC 0.622  d vs T-LR -0.149
-% history h=0.8: AUC 0.607  d vs T-LR -0.164
-% history h=1.0: AUC 0.617  d vs T-LR -0.154
-% same-ecosystem LR deltas: [0.12228466747164801, 0.06358628274345135]
-% P@5% lift otc: T-LR 3.55 T-deg 0.76 T-rep 1.11 LR mean 2.78 LR max 6.31
-% P@5% lift alpha: T-LR 7.22 T-deg 0.56 T-rep 1.25 LR mean 5.00 LR max 9.44
-% P@5% lift epinions: T-LR 5.45 T-deg 1.51 T-rep 5.19 LR mean 3.09 LR max 5.26
-% P@5% lift slashdot: T-LR 2.70 T-deg 1.04 T-rep 2.26 LR mean 1.55 LR max 2.51
-% P@5% lift wikirfa: T-LR 3.65 T-deg 3.78 T-rep 1.10 LR mean 1.77 LR max 2.52
-% P@5% lift reddit: T-LR 3.27 T-deg 0.46 T-rep 0.57 LR mean 0.88 LR max 1.75
-% construction receiver_given__own_label_True__source_scaler_raw: mean over 30 pairs 0.531; otc->alpha, alpha->otc, otc->epinions [0.452, 0.576, 0.465]
-% construction receiver_given__own_label_False__source_scaler_raw: mean over 30 pairs 0.505; otc->alpha, alpha->otc, otc->epinions [0.481, 0.572, 0.596]
-% construction receiver_received__own_label_True__source_scaler_raw: mean over 30 pairs 0.616; otc->alpha, alpha->otc, otc->epinions [0.467, 0.567, 0.847]
-% construction receiver_received__own_label_False__source_scaler_raw: mean over 30 pairs 0.497; otc->alpha, alpha->otc, otc->epinions [0.475, 0.556, 0.368]
-% construction receiver_given__own_label_True__per_domain_log: mean over 30 pairs 0.570; otc->alpha, alpha->otc, otc->epinions [0.599, 0.599, 0.546]
-% construction receiver_given__own_label_False__per_domain_log: mean over 30 pairs 0.538; otc->alpha, alpha->otc, otc->epinions [0.474, 0.596, 0.58]
-% construction receiver_received__own_label_True__per_domain_log: mean over 30 pairs 0.640; otc->alpha, alpha->otc, otc->epinions [0.642, 0.605, 0.848]
-% construction receiver_received__own_label_False__per_domain_log: mean over 30 pairs 0.582; otc->alpha, alpha->otc, otc->epinions [0.503, 0.582, 0.456]
-% control.json otc: T-LR 0.663 LR 0.809 d +0.146 (CI>0 2/3, CI<0 0/3) GBDT d +0.067
-% control.json alpha: T-LR 0.703 LR 0.774 d +0.071 (CI>0 0/3, CI<0 0/3) GBDT d -0.055
-% control.json epinions: T-LR 0.888 LR 0.823 d -0.065 (CI>0 0/3, CI<0 3/3) GBDT d -0.105
-% control.json slashdot: T-LR 0.719 LR 0.722 d +0.003 (CI>0 0/3, CI<0 0/3) GBDT d -0.011
-% control.json wikirfa: T-LR 0.711 LR 0.701 d -0.010 (CI>0 0/3, CI<0 1/3) GBDT d +0.003
-% control.json reddit: T-LR 0.750 LR 0.744 d -0.006 (CI>0 0/3, CI<0 2/3) GBDT d +0.001
-% control_h0.4.json otc: T-LR 0.663 LR 0.744 d +0.081 (CI>0 2/3, CI<0 0/3) GBDT d -0.025
-% control_h0.4.json alpha: T-LR 0.703 LR 0.768 d +0.064 (CI>0 1/3, CI<0 0/3) GBDT d -0.021
-% control_h0.4.json epinions: T-LR 0.888 LR 0.906 d +0.018 (CI>0 3/3, CI<0 0/3) GBDT d +0.019
-% control_h0.4.json slashdot: T-LR 0.719 LR 0.725 d +0.006 (CI>0 1/3, CI<0 0/3) GBDT d -0.045
-% control_h0.4.json wikirfa: T-LR 0.711 LR 0.698 d -0.013 (CI>0 0/3, CI<0 1/3) GBDT d +0.013
-% control_h0.4.json reddit: T-LR 0.750 LR 0.731 d -0.019 (CI>0 0/3, CI<0 3/3) GBDT d -0.006
-% budget otc: first q where T-LR >= mean transfer: 0.1; neg revealed at q: [1, 2, 6, 15, 42, 147]; T-LR minus best source: [-0.298, -0.306, -0.249, -0.145, -0.083, -0.064]
-% budget alpha: first q where T-LR >= mean transfer: 0.1; neg revealed at q: [0, 1, 2, 7, 23, 76]; T-LR minus best source: [-0.271, -0.258, -0.235, -0.138, -0.203, -0.122]
-% budget epinions: first q where T-LR >= mean transfer: 0.003; neg revealed at q: [134, 467, 1364, 4562, 13616, 45685]; T-LR minus best source: [0.079, 0.053, 0.061, 0.044, 0.025, 0.014]
-% budget slashdot: first q where T-LR >= mean transfer: 0.003; neg revealed at q: [60, 201, 630, 2111, 6301, 21091]; T-LR minus best source: [-0.002, 0.014, 0.012, 0.021, 0.025, 0.035]
-% budget wikirfa: first q where T-LR >= mean transfer: 0.003; neg revealed at q: [18, 67, 210, 660, 1965, 6540]; T-LR minus best source: [-0.07, 0.007, 0.021, 0.034, 0.047, 0.057]
-% budget reddit: first q where T-LR >= mean transfer: 0.003; neg revealed at q: [53, 183, 523, 1675, 5081, 16753]; T-LR minus best source: [0.106, 0.119, 0.122, 0.117, 0.112, 0.108]
-% Pooled-LR: CI<0 on 6 of 6 targets; mean d -0.081
-% V-REx: CI<0 on 5 of 6 targets; mean d -0.105
-% triage: target | base | T-Deg | T-Rep | T-LR | LR mean | LR best (source), each P@1%/P@5% lift
-OTC & 0.063 & 1.1 / 0.8 & 0.9 / 1.1 & 0.4 / 3.6 & 3.2 / 2.8 & 1.5 / 6.3 & Alpha \\
-Alpha & 0.030 & 0.0 / 0.6 & 3.4 / 1.2 & 11.0 / 7.2 & 13.0 / 5.0 & 13.7 / 9.4 & OTC \\
-Epin. & 0.174 & 1.5 / 1.5 & 5.6 / 5.2 & 5.6 / 5.4 & 3.6 / 3.1 & 5.6 / 5.3 & Slash. \\
-Slash. & 0.238 & 1.0 / 1.0 & 3.0 / 2.3 & 3.5 / 2.7 & 1.6 / 1.5 & 3.3 / 2.5 & Epin. \\
-RfA & 0.233 & 4.0 / 3.8 & 1.1 / 1.1 & 3.8 / 3.7 & 1.5 / 1.8 & 2.0 / 2.5 & Epin. \\
-Reddit & 0.095 & 0.4 / 0.5 & 0.7 / 0.6 & 3.3 / 3.3 & 0.9 / 0.9 & 2.1 / 1.8 & Slash. \\
-% families: target | activity | neighbourhood | reputation | all (mean transfer / target-only)
-% families otc: 0.643/0.751 0.492/0.600 0.560/0.495 0.666/0.779
-% families alpha: 0.610/0.773 0.486/0.539 0.581/0.581 0.643/0.732
-% families epinions: 0.553/0.740 0.469/0.681 0.619/0.864 0.652/0.893
-% families slashdot: 0.553/0.579 0.522/0.570 0.569/0.706 0.598/0.731
-% families wikirfa: 0.487/0.659 0.479/0.637 0.528/0.602 0.618/0.731
-% families reddit: 0.547/0.683 0.527/0.669 0.554/0.753 0.522/0.760
+% data: graph | nodes | edges | pos | neg prefix | neg fit window | neg rate prefix/fit/test | test rater/receiver active in prefix | test rater rated in prefix | id AUC sorted/first/random | within age | rho | received-negative share per id decile
+OTC & 5,881 & 35,592 & 0.90 & 147 & 111 & 0.021/0.031/0.063 & 0.33/0.32 & 0.33 & 0.65/0.65/0.53 & 0.48 & 1.00 & [0.037, 0.063, 0.071, 0.071, 0.137, 0.079, 0.101, 0.223, 0.228, 0.169] top-decile raw id >= 5387.0 first rated t 1392147156
+Alpha & 3,783 & 24,186 & 0.94 & 76 & 49 & 0.016/0.020/0.030 & 0.37/0.36 & 0.35 & 0.84/0.49/0.47 & 0.82 & 0.33 & [0.028, 0.033, 0.038, 0.018, 0.021, 0.008, 0.031, 0.005, 0.027, 0.537] top-decile raw id >= 3406.0 first rated t 1291438800
+Epin. & 131,828 & 841,372 & 0.85 & 45,685 & 21,626 & 0.271/0.257/0.174 & 0.93/0.85 & 0.00 & 0.48/0.48/0.50 & 0.32 & 1.00 & [0.144, 0.181, 0.167, 0.098, 0.133, 0.116, 0.083, 0.078, 0.087, 0.162] top-decile raw id >= 118646.0 first rated t 806450
+Slash. & 82,140 & 549,202 & 0.77 & 21,091 & 12,360 & 0.192/0.225/0.238 & 0.96/0.83 & 0.00 & 0.54/0.54/0.50 & 0.51 & 0.81 & [0.211, 0.262, 0.236, 0.249, 0.243, 0.257, 0.246, 0.227, 0.157, 0.08] top-decile raw id >= 73928.0 first rated t 479063
+RfA & 10,595 & 170,499 & 0.78 & 6,540 & 3,889 & 0.192/0.228/0.233 & 0.51/0.39 & 0.51 & 0.61/0.54/0.48 & 0.61 & -0.75 & [0.174, 0.226, 0.228, 0.249, 0.191, 0.217, 0.2, 0.284, 0.352, 0.379] top-decile raw id >= 9536.0 first rated t 1083384540
+Reddit & 67,180 & 858,488 & 0.90 & 16,753 & 8,205 & 0.098/0.096/0.095 & 0.84/0.92 & 0.83 & 0.51/0.39/0.52 & 0.51 & 0.03 & [0.109, 0.093, 0.078, 0.09, 0.086, 0.089, 0.096, 0.094, 0.105, 0.111] top-decile raw id >= None first rated t 1388532933
+% [forecast] target-only AUC: target | T-Deg | T-Rep | T-LR | T-GBDT | T-GNN | T-SGCN | neg rate
+OTC & 0.584 & 0.581 & 0.575 & 0.579 & 0.542 & 0.539 & 0.063 \\
+Alpha & 0.551 & 0.538 & 0.598 & 0.601 & 0.500 & 0.589 & 0.030 \\
+Epin. & 0.650 & 0.853 & 0.904 & 0.891 & 0.944 & 0.938 & 0.174 \\
+Slash. & 0.526 & 0.678 & 0.721 & 0.710 & 0.772 & 0.781 & 0.238 \\
+RfA & 0.542 & 0.503 & 0.690 & 0.687 & 0.688 & 0.699 & 0.233 \\
+Reddit & 0.422 & 0.572 & 0.759 & 0.766 & 0.769 & 0.771 & 0.095 \\
+% [forecast] means: T-deg 0.546 T-rep 0.621 T-LR 0.708 T-GBDT 0.706 T-GNN 0.702 T-SGCN 0.720
+% [forecast] method | AUC | dAUC [platform CI] | CI>0 | CI<0 | timestamped d | file-order d | Bitcoin pair d | same-kind d | other d | LOPO range
+LR-T1 & 0.533 & -0.175 [-0.285, -0.076] & 0 & 23 & ts -0.123 & fo -0.278 & btc [-0.016, 0.061] & same -0.077 & other -0.190 & lopo [-0.216 w/o otc, -0.140 w/o epinions] \\
+LR & 0.575 & -0.133 [-0.242, -0.033] & 3 & 23 & ts -0.095 & fo -0.209 & btc [0.067, 0.089] & same +0.030 & other -0.158 & lopo [-0.181 w/o otc, -0.089 w/o wikirfa] \\
+GBDT & 0.571 & -0.137 [-0.200, -0.081] & 0 & 24 & ts -0.118 & fo -0.175 & btc [-0.012, -0.05] & same -0.033 & other -0.153 & lopo [-0.162 w/o otc, -0.120 w/o wikirfa] \\
+CORAL & 0.579 & -0.128 [-0.236, -0.029] & 3 & 23 & ts -0.090 & fo -0.206 & btc [0.09, 0.087] & same +0.031 & other -0.153 & lopo [-0.178 w/o otc, -0.092 w/o wikirfa] \\
+DANN & 0.598 & -0.110 [-0.201, -0.025] & 3 & 22 & ts -0.086 & fo -0.159 & btc [0.086, 0.099] & same +0.030 & other -0.132 & lopo [-0.149 w/o otc, -0.085 w/o reddit] \\
+GNN & 0.608 & -0.100 [-0.186, +0.002] & 3 & 19 & ts -0.071 & fo -0.157 & btc [0.081, 0.117] & same +0.051 & other -0.123 & lopo [-0.135 w/o otc, -0.063 w/o wikirfa] \\
+GNN-DGI & 0.618 & -0.090 [-0.163, -0.006] & 3 & 20 & ts -0.066 & fo -0.138 & btc [0.101, 0.115] & same +0.055 & other -0.112 & lopo [-0.119 w/o otc, -0.058 w/o wikirfa] \\
+SGCN & 0.615 & -0.093 [-0.175, -0.003] & 3 & 18 & ts -0.066 & fo -0.147 & btc [0.095, 0.126] & same +0.058 & other -0.116 & lopo [-0.125 w/o otc, -0.055 w/o wikirfa] \\
+Pooled-LR & 0.666 & -0.042 [-0.106, +0.027] & 1 & 4 (of 6 targets) & per target OTC +0.104 Alpha -0.027 Epin. -0.048 Slash. -0.044 RfA -0.173 Reddit -0.061 \\
+V-REx & 0.644 & -0.064 [-0.107, -0.015] & 0 & 4 (of 6 targets) & per target OTC +0.049 Alpha -0.052 Epin. -0.041 Slash. -0.090 RfA -0.120 Reddit -0.130 \\
+% [forecast] transfer AUC (LR, all features); rows sources, columns targets; * = CI>0 vs T-LR
+OTC & -- & \textbf{0.665} & 0.732 & 0.580 & 0.587 & 0.607 \\
+Alpha & \textbf{0.663} & -- & 0.514 & 0.536 & 0.521 & 0.522 \\
+Epin. & 0.563 & 0.458 & -- & 0.716 & 0.622 & 0.468 \\
+Slash. & \textbf{0.644} & 0.530 & 0.873 & -- & 0.457 & 0.620 \\
+RfA & 0.490 & 0.496 & 0.232 & 0.344 & -- & 0.499 \\
+Reddit & 0.652 & 0.592 & 0.838 & 0.674 & 0.559 & -- \\
+Mean of five sources & 0.602 & 0.548 & 0.638 & 0.570 & 0.549 & 0.543 \\
+T-LR & 0.575 & 0.598 & 0.904 & 0.721 & 0.690 & 0.759 \\
+activity & 0.588/0.638 & 0.545/0.566 & 0.516/0.738 & 0.505/0.534 & 0.531/0.644 & 0.504/0.678 \\
+neighbourhood & 0.505/0.541 & 0.495/0.569 & 0.514/0.621 & 0.506/0.558 & 0.460/0.626 & 0.500/0.663 \\
+reputation & 0.557/0.498 & 0.539/0.585 & 0.647/0.864 & 0.582/0.715 & 0.524/0.599 & 0.555/0.753 \\
+% [forecast] triage: target | n test | reviewed 1%/5% | negatives found (lift) for T-Deg, T-Rep, T-LR, LR mean of sources, LR best source in hindsight
+OTC & 7118 & 72/356 & base 0.063 & 7/31 (1.5/1.4) & 4/25 (0.9/1.1) & 8/38 (1.8/1.7) & 15/40 (3.2/1.8) & 16/58 (3.5/2.6) Alpha \\
+Alpha & 4837 & 49/242 & base 0.030 & 1/6 (0.7/0.8) & 5/9 (3.4/1.2) & 10/19 (6.9/2.6) & 4/12 (2.6/1.7) & 2/18 (1.4/2.5) Reddit \\
+Epin. & 168274 & 1683/8414 & base 0.174 & 415/2097 (1.4/1.4) & 1634/7598 (5.6/5.2) & 1662/8094 (5.7/5.5) & 1077/4719 (3.7/3.2) & 1658/7728 (5.7/5.3) Slash. \\
+Slash. & 109840 & 1099/5492 & base 0.238 & 253/1345 (1.0/1.0) & 784/2950 (3.0/2.3) & 945/3734 (3.6/2.9) & 521/2082 (2.0/1.6) & 905/3625 (3.5/2.8) Epin. \\
+RfA & 34100 & 341/1705 & base 0.233 & 88/472 (1.1/1.2) & 90/437 (1.1/1.1) & 226/937 (2.8/2.4) & 109/494 (1.4/1.2) & 185/708 (2.3/1.8) Reddit \\
+Reddit & 171698 & 1717/8585 & base 0.095 & 76/389 (0.5/0.5) & 110/466 (0.7/0.6) & 536/2699 (3.3/3.3) & 186/863 (1.1/1.1) & 322/1470 (2.0/1.8) OTC \\
+% [forecast] control h=0.4 otc: T-LR 0.552 LR d +0.084 (CI>0 2/3, CI<0 0/3) GBDT d +0.027
+% [forecast] control h=0.4 alpha: T-LR 0.540 LR d +0.020 (CI>0 0/3, CI<0 0/3) GBDT d -0.012
+% [forecast] control h=0.4 epinions: T-LR 0.893 LR d +0.011 (CI>0 2/3, CI<0 0/3) GBDT d +0.011
+% [forecast] control h=0.4 slashdot: T-LR 0.702 LR d -0.011 (CI>0 0/3, CI<0 1/3) GBDT d -0.018
+% [forecast] control h=0.4 wikirfa: T-LR 0.676 LR d -0.009 (CI>0 1/3, CI<0 2/3) GBDT d -0.025
+% [forecast] control h=0.4 reddit: T-LR 0.749 LR d -0.020 (CI>0 0/3, CI<0 3/3) GBDT d -0.016
+% [forecast] control h=1.0 otc: T-LR 0.552 LR d +0.098 (CI>0 1/3, CI<0 0/3) GBDT d +0.033
+% [forecast] control h=1.0 alpha: T-LR 0.540 LR d +0.040 (CI>0 0/3, CI<0 0/3) GBDT d +0.043
+% [forecast] control h=1.0 epinions: T-LR 0.893 LR d -0.017 (CI>0 0/3, CI<0 0/3) GBDT d -0.065
+% [forecast] control h=1.0 slashdot: T-LR 0.702 LR d -0.021 (CI>0 0/3, CI<0 3/3) GBDT d -0.018
+% [forecast] control h=1.0 wikirfa: T-LR 0.676 LR d -0.020 (CI>0 0/3, CI<0 2/3) GBDT d -0.041
+% [forecast] control h=1.0 reddit: T-LR 0.749 LR d -0.006 (CI>0 0/3, CI<0 2/3) GBDT d -0.001
+% [forecast] few-shot: target k | negatives in training window | T-LR | method mean AUC | mean d vs T-LR (sd over draws) | sources beating T-LR on average
+% fs otc k=0 neg_train 0.0 T-LR 0.584(0.000) T-Deg 0.584 | ZS-LR 0.555 d -0.029(0.000) w2 | WS-LR 0.555 d -0.029(0.000) w2 | Pool-LR 0.571 d -0.013(0.000) w2 | WS-GBDT 0.503 d -0.081(0.000) w0 | best source-method 0.655
+% fs otc k=5 neg_train 3.6 T-LR 0.546(0.071) T-Deg 0.584 | ZS-LR 0.583 d +0.037(0.070) w3 | WS-LR 0.551 d +0.006(0.002) w5 | Pool-LR 0.562 d +0.016(0.029) w4 | WS-GBDT 0.503 d -0.042(0.071) w0 | best source-method 0.655
+% fs otc k=10 neg_train 7.6 T-LR 0.595(0.068) T-Deg 0.584 | ZS-LR 0.582 d -0.013(0.071) w2 | WS-LR 0.599 d +0.004(0.004) w5 | Pool-LR 0.610 d +0.015(0.025) w4 | WS-GBDT 0.543 d -0.051(0.042) w0 | best source-method 0.653
+% fs otc k=25 neg_train 18.6 T-LR 0.564(0.051) T-Deg 0.584 | ZS-LR 0.590 d +0.027(0.053) w3 | WS-LR 0.567 d +0.004(0.003) w5 | Pool-LR 0.591 d +0.028(0.010) w4 | WS-GBDT 0.585 d +0.022(0.049) w4 | best source-method 0.655
+% fs otc k=50 neg_train 37.3 T-LR 0.550(0.032) T-Deg 0.584 | ZS-LR 0.590 d +0.039(0.036) w3 | WS-LR 0.554 d +0.003(0.002) w4 | Pool-LR 0.584 d +0.034(0.015) w4 | WS-GBDT 0.570 d +0.019(0.025) w4 | best source-method 0.658
+% fs otc k=100 neg_train 75.8 T-LR 0.570(0.016) T-Deg 0.584 | ZS-LR 0.600 d +0.029(0.018) w3 | WS-LR 0.575 d +0.005(0.002) w5 | Pool-LR 0.599 d +0.029(0.013) w4 | WS-GBDT 0.584 d +0.014(0.016) w3 | best source-method 0.661
+% fs alpha k=0 neg_train 0.0 T-LR 0.551(0.000) T-Deg 0.551 | ZS-LR 0.506 d -0.044(0.000) w2 | WS-LR 0.506 d -0.044(0.000) w2 | Pool-LR 0.516 d -0.034(0.000) w2 | WS-GBDT 0.526 d -0.025(0.000) w2 | best source-method 0.585
+% fs alpha k=5 neg_train 3.0 T-LR 0.533(0.040) T-Deg 0.551 | ZS-LR 0.497 d -0.036(0.035) w2 | WS-LR 0.533 d +0.000(0.009) w3 | Pool-LR 0.540 d +0.007(0.018) w3 | WS-GBDT 0.516 d -0.017(0.040) w1 | best source-method 0.575
+% fs alpha k=10 neg_train 6.3 T-LR 0.527(0.025) T-Deg 0.551 | ZS-LR 0.490 d -0.037(0.028) w1 | WS-LR 0.525 d -0.001(0.004) w2 | Pool-LR 0.524 d -0.003(0.018) w2 | WS-GBDT 0.524 d -0.003(0.028) w2 | best source-method 0.570
+% fs alpha k=25 neg_train 16.1 T-LR 0.546(0.017) T-Deg 0.551 | ZS-LR 0.507 d -0.040(0.019) w1 | WS-LR 0.550 d +0.004(0.004) w4 | Pool-LR 0.529 d -0.017(0.011) w1 | WS-GBDT 0.538 d -0.009(0.015) w2 | best source-method 0.611
+% fs alpha k=50 neg_train 32.9 T-LR 0.594(0.032) T-Deg 0.551 | ZS-LR 0.534 d -0.059(0.034) w1 | WS-LR 0.603 d +0.010(0.005) w4 | Pool-LR 0.571 d -0.023(0.021) w1 | WS-GBDT 0.556 d -0.037(0.020) w0 | best source-method 0.650
+% fs alpha k=100 neg_train 49.0 T-LR 0.598(0.000) T-Deg 0.551 | ZS-LR 0.548 d -0.050(0.000) w1 | WS-LR 0.611 d +0.013(0.000) w4 | Pool-LR 0.578 d -0.019(0.000) w1 | WS-GBDT 0.551 d -0.046(0.000) w0 | best source-method 0.665
+% fs epinions k=0 neg_train 0.0 T-LR 0.650(0.000) T-Deg 0.650 | ZS-LR 0.554 d -0.097(0.000) w1 | WS-LR 0.554 d -0.097(0.000) w1 | Pool-LR 0.558 d -0.092(0.000) w1 | WS-GBDT 0.518 d -0.132(0.000) w0 | best source-method 0.651
+% fs epinions k=5 neg_train 2.0 T-LR 0.713(0.066) T-Deg 0.650 | ZS-LR 0.554 d -0.159(0.066) w0 | WS-LR 0.713 d +0.000(0.013) w2 | Pool-LR 0.640 d -0.073(0.079) w0 | WS-GBDT 0.520 d -0.193(0.066) w0 | best source-method 0.742
+% fs epinions k=10 neg_train 3.7 T-LR 0.713(0.080) T-Deg 0.650 | ZS-LR 0.554 d -0.159(0.080) w0 | WS-LR 0.711 d -0.002(0.008) w2 | Pool-LR 0.676 d -0.037(0.021) w0 | WS-GBDT 0.521 d -0.192(0.080) w0 | best source-method 0.733
+% fs epinions k=25 neg_train 11.1 T-LR 0.774(0.022) T-Deg 0.650 | ZS-LR 0.556 d -0.218(0.022) w0 | WS-LR 0.769 d -0.005(0.007) w2 | Pool-LR 0.736 d -0.038(0.016) w0 | WS-GBDT 0.653 d -0.121(0.059) w0 | best source-method 0.781
+% fs epinions k=50 neg_train 24.4 T-LR 0.784(0.013) T-Deg 0.650 | ZS-LR 0.558 d -0.226(0.013) w0 | WS-LR 0.782 d -0.002(0.003) w2 | Pool-LR 0.762 d -0.022(0.006) w0 | WS-GBDT 0.726 d -0.058(0.016) w0 | best source-method 0.788
+% fs epinions k=100 neg_train 46.2 T-LR 0.779(0.023) T-Deg 0.650 | ZS-LR 0.561 d -0.217(0.023) w0 | WS-LR 0.778 d -0.001(0.004) w2 | Pool-LR 0.765 d -0.014(0.016) w0 | WS-GBDT 0.729 d -0.050(0.015) w0 | best source-method 0.782
+% fs slashdot k=0 neg_train 0.0 T-LR 0.526(0.000) T-Deg 0.526 | ZS-LR 0.515 d -0.011(0.000) w2 | WS-LR 0.515 d -0.011(0.000) w2 | Pool-LR 0.514 d -0.012(0.000) w2 | WS-GBDT 0.505 d -0.021(0.000) w2 | best source-method 0.550
+% fs slashdot k=5 neg_train 2.6 T-LR 0.517(0.025) T-Deg 0.526 | ZS-LR 0.515 d -0.001(0.025) w3 | WS-LR 0.519 d +0.002(0.008) w3 | Pool-LR 0.515 d -0.002(0.011) w2 | WS-GBDT 0.507 d -0.010(0.026) w2 | best source-method 0.550
+% fs slashdot k=10 neg_train 5.5 T-LR 0.525(0.013) T-Deg 0.526 | ZS-LR 0.516 d -0.010(0.014) w2 | WS-LR 0.526 d +0.000(0.003) w2 | Pool-LR 0.521 d -0.005(0.008) w2 | WS-GBDT 0.507 d -0.018(0.013) w1 | best source-method 0.551
+% fs slashdot k=25 neg_train 14.4 T-LR 0.529(0.015) T-Deg 0.526 | ZS-LR 0.517 d -0.013(0.015) w2 | WS-LR 0.528 d -0.001(0.002) w2 | Pool-LR 0.525 d -0.004(0.005) w2 | WS-GBDT 0.518 d -0.011(0.013) w0 | best source-method 0.552
+% fs slashdot k=50 neg_train 29.5 T-LR 0.545(0.008) T-Deg 0.526 | ZS-LR 0.518 d -0.027(0.009) w1 | WS-LR 0.545 d +0.000(0.002) w2 | Pool-LR 0.544 d -0.001(0.005) w3 | WS-GBDT 0.535 d -0.010(0.011) w0 | best source-method 0.556
+% fs slashdot k=100 neg_train 57.4 T-LR 0.546(0.013) T-Deg 0.526 | ZS-LR 0.519 d -0.026(0.012) w1 | WS-LR 0.545 d -0.001(0.001) w2 | Pool-LR 0.547 d +0.001(0.007) w3 | WS-GBDT 0.538 d -0.007(0.013) w0 | best source-method 0.560
+% fs wikirfa k=0 neg_train 0.0 T-LR 0.542(0.000) T-Deg 0.542 | ZS-LR 0.524 d -0.018(0.000) w3 | WS-LR 0.524 d -0.018(0.000) w3 | Pool-LR 0.526 d -0.015(0.000) w3 | WS-GBDT 0.515 d -0.027(0.000) w2 | best source-method 0.629
+% fs wikirfa k=5 neg_train 2.7 T-LR 0.525(0.093) T-Deg 0.542 | ZS-LR 0.525 d +0.000(0.094) w3 | WS-LR 0.533 d +0.008(0.011) w4 | Pool-LR 0.521 d -0.004(0.040) w1 | WS-GBDT 0.515 d -0.010(0.094) w2 | best source-method 0.624
+% fs wikirfa k=10 neg_train 5.6 T-LR 0.583(0.066) T-Deg 0.542 | ZS-LR 0.526 d -0.057(0.067) w1 | WS-LR 0.586 d +0.003(0.008) w4 | Pool-LR 0.566 d -0.017(0.034) w1 | WS-GBDT 0.518 d -0.065(0.066) w1 | best source-method 0.623
+% fs wikirfa k=25 neg_train 14.7 T-LR 0.588(0.033) T-Deg 0.542 | ZS-LR 0.528 d -0.060(0.035) w1 | WS-LR 0.588 d +0.000(0.004) w2 | Pool-LR 0.575 d -0.013(0.008) w1 | WS-GBDT 0.568 d -0.020(0.016) w1 | best source-method 0.622
+% fs wikirfa k=50 neg_train 30.0 T-LR 0.605(0.042) T-Deg 0.542 | ZS-LR 0.533 d -0.073(0.043) w1 | WS-LR 0.607 d +0.001(0.003) w5 | Pool-LR 0.602 d -0.004(0.017) w2 | WS-GBDT 0.596 d -0.009(0.028) w1 | best source-method 0.621
+% fs wikirfa k=100 neg_train 58.3 T-LR 0.633(0.019) T-Deg 0.542 | ZS-LR 0.537 d -0.096(0.021) w0 | WS-LR 0.634 d +0.000(0.002) w4 | Pool-LR 0.621 d -0.012(0.009) w1 | WS-GBDT 0.606 d -0.028(0.013) w0 | best source-method 0.641
+% fs reddit k=0 neg_train 0.0 T-LR 0.422(0.000) T-Deg 0.422 | ZS-LR 0.505 d +0.083(0.000) w4 | WS-LR 0.505 d +0.083(0.000) w4 | Pool-LR 0.508 d +0.086(0.000) w4 | WS-GBDT 0.476 d +0.054(0.000) w4 | best source-method 0.622
+% fs reddit k=5 neg_train 2.0 T-LR 0.526(0.086) T-Deg 0.422 | ZS-LR 0.483 d -0.043(0.090) w2 | WS-LR 0.519 d -0.007(0.031) w1 | Pool-LR 0.517 d -0.009(0.059) w1 | WS-GBDT 0.475 d -0.051(0.086) w0 | best source-method 0.563
+% fs reddit k=10 neg_train 4.0 T-LR 0.527(0.078) T-Deg 0.422 | ZS-LR 0.496 d -0.031(0.073) w2 | WS-LR 0.522 d -0.005(0.005) w1 | Pool-LR 0.519 d -0.008(0.039) w2 | WS-GBDT 0.505 d -0.022(0.048) w2 | best source-method 0.579
+% fs reddit k=25 neg_train 11.7 T-LR 0.547(0.053) T-Deg 0.422 | ZS-LR 0.497 d -0.050(0.040) w1 | WS-LR 0.544 d -0.003(0.005) w1 | Pool-LR 0.548 d +0.001(0.023) w3 | WS-GBDT 0.555 d +0.008(0.044) w4 | best source-method 0.592
+% fs reddit k=50 neg_train 24.9 T-LR 0.639(0.023) T-Deg 0.422 | ZS-LR 0.504 d -0.135(0.022) w0 | WS-LR 0.637 d -0.002(0.001) w2 | Pool-LR 0.628 d -0.011(0.010) w2 | WS-GBDT 0.577 d -0.062(0.023) w0 | best source-method 0.660
+% fs reddit k=100 neg_train 47.9 T-LR 0.670(0.015) T-Deg 0.422 | ZS-LR 0.511 d -0.160(0.011) w0 | WS-LR 0.670 d -0.000(0.001) w3 | Pool-LR 0.653 d -0.017(0.009) w1 | WS-GBDT 0.591 d -0.079(0.017) w0 | best source-method 0.674
+% [batch] target-only AUC: target | T-Deg | T-Rep | T-LR | T-GBDT | T-GNN | T-SGCN | neg rate
+OTC & 0.619 & 0.581 & 0.779 & 0.652 & 0.636 & 0.690 & 0.063 \\
+Alpha & 0.588 & 0.538 & 0.732 & 0.592 & 0.462 & 0.580 & 0.030 \\
+Epin. & 0.665 & 0.853 & 0.893 & 0.877 & 0.950 & 0.936 & 0.174 \\
+Slash. & 0.525 & 0.678 & 0.731 & 0.666 & 0.805 & 0.738 & 0.238 \\
+RfA & 0.654 & 0.503 & 0.731 & 0.730 & 0.716 & 0.730 & 0.233 \\
+Reddit & 0.421 & 0.572 & 0.760 & 0.766 & 0.767 & 0.770 & 0.095 \\
+% [batch] means: T-deg 0.579 T-rep 0.621 T-LR 0.771 T-GBDT 0.714 T-GNN 0.723 T-SGCN 0.741
+% [batch] method | AUC | dAUC [platform CI] | CI>0 | CI<0 | timestamped d | file-order d | Bitcoin pair d | same-kind d | other d | LOPO range
+LR-T1 & 0.565 & -0.206 [-0.299, -0.114] & 1 & 28 & ts -0.176 & fo -0.265 & btc [0.05, 0.066] & same -0.079 & other -0.225 & lopo [-0.226 w/o otc, -0.169 w/o reddit] \\
+LR & 0.617 & -0.154 [-0.217, -0.078] & 2 & 28 & ts -0.138 & fo -0.187 & btc [0.122, 0.064] & same +0.034 & other -0.183 & lopo [-0.180 w/o slashdot, -0.132 w/o wikirfa] \\
+GBDT & 0.591 & -0.180 [-0.249, -0.121] & 0 & 28 & ts -0.186 & fo -0.167 & btc [0.03, -0.015] & same -0.028 & other -0.203 & lopo [-0.204 w/o slashdot, -0.164 w/o epinions] \\
+CORAL & 0.612 & -0.159 [-0.226, -0.079] & 2 & 28 & ts -0.143 & fo -0.191 & btc [0.128, 0.061] & same +0.030 & other -0.188 & lopo [-0.185 w/o slashdot, -0.141 w/o epinions] \\
+DANN & 0.608 & -0.163 [-0.241, -0.087] & 2 & 28 & ts -0.154 & fo -0.181 & btc [0.073, 0.069] & same +0.019 & other -0.191 & lopo [-0.193 w/o slashdot, -0.139 w/o epinions] \\
+GNN & 0.613 & -0.158 [-0.230, -0.087] & 0 & 27 & ts -0.151 & fo -0.172 & btc [0.036, 0.027] & same +0.015 & other -0.184 & lopo [-0.183 w/o slashdot, -0.140 w/o epinions] \\
+GNN-DGI & 0.628 & -0.143 [-0.227, -0.070] & 1 & 27 & ts -0.138 & fo -0.153 & btc [0.045, 0.026] & same +0.019 & other -0.167 & lopo [-0.168 w/o slashdot, -0.122 w/o epinions] \\
+SGCN & 0.623 & -0.148 [-0.207, -0.068] & 1 & 27 & ts -0.145 & fo -0.154 & btc [0.092, 0.024] & same -0.007 & other -0.170 & lopo [-0.164 w/o otc, -0.120 w/o wikirfa] \\
+Pooled-LR & 0.690 & -0.081 [-0.103, -0.059] & 0 & 6 (of 6 targets) & per target OTC -0.109 Alpha -0.063 Epin. -0.036 Slash. -0.075 RfA -0.090 Reddit -0.116 \\
+V-REx & 0.666 & -0.105 [-0.145, -0.065] & 0 & 5 (of 6 targets) & per target OTC -0.140 Alpha -0.035 Epin. -0.040 Slash. -0.104 RfA -0.132 Reddit -0.177 \\
+% [batch] transfer AUC (LR, all features); rows sources, columns targets; * = CI>0 vs T-LR
+OTC & -- & \textbf{0.855} & 0.572 & 0.543 & 0.626 & 0.492 \\
+Alpha & \textbf{0.842} & -- & 0.495 & 0.557 & 0.577 & 0.495 \\
+Epin. & 0.647 & 0.610 & -- & 0.696 & 0.674 & 0.496 \\
+Slash. & 0.686 & 0.665 & 0.879 & -- & 0.634 & 0.652 \\
+RfA & 0.548 & 0.445 & 0.507 & 0.502 & -- & 0.474 \\
+Reddit & 0.609 & 0.640 & 0.809 & 0.690 & 0.581 & -- \\
+Mean of five sources & 0.666 & 0.643 & 0.652 & 0.598 & 0.618 & 0.522 \\
+T-LR & 0.779 & 0.732 & 0.893 & 0.731 & 0.731 & 0.760 \\
+activity & 0.643/0.751 & 0.610/0.773 & 0.553/0.740 & 0.553/0.579 & 0.487/0.659 & 0.547/0.683 \\
+neighbourhood & 0.492/0.600 & 0.486/0.539 & 0.469/0.681 & 0.522/0.570 & 0.479/0.637 & 0.527/0.669 \\
+reputation & 0.560/0.495 & 0.581/0.581 & 0.619/0.864 & 0.569/0.706 & 0.528/0.602 & 0.554/0.753 \\
+% [batch] triage: target | n test | reviewed 1%/5% | negatives found (lift) for T-Deg, T-Rep, T-LR, LR mean of sources, LR best source in hindsight
+OTC & 7118 & 72/356 & base 0.063 & 5/17 (1.1/0.8) & 4/25 (0.9/1.1) & 2/80 (0.4/3.6) & 15/63 (3.2/2.8) & 7/142 (1.5/6.3) Alpha \\
+Alpha & 4837 & 49/242 & base 0.030 & 0/4 (0.0/0.6) & 5/9 (3.4/1.2) & 16/52 (11.0/7.2) & 19/36 (13.0/5.0) & 20/68 (13.7/9.4) OTC \\
+Epin. & 168274 & 1683/8414 & base 0.174 & 425/2211 (1.5/1.5) & 1634/7598 (5.6/5.2) & 1649/7980 (5.6/5.4) & 1043/4522 (3.6/3.1) & 1647/7707 (5.6/5.3) Slash. \\
+Slash. & 109840 & 1099/5492 & base 0.238 & 260/1357 (1.0/1.0) & 784/2950 (3.0/2.3) & 906/3533 (3.5/2.7) & 426/2025 (1.6/1.5) & 869/3282 (3.3/2.5) Epin. \\
+RfA & 34100 & 341/1705 & base 0.233 & 316/1503 (4.0/3.8) & 90/437 (1.1/1.1) & 306/1451 (3.8/3.7) & 120/704 (1.5/1.8) & 159/1003 (2.0/2.5) Epin. \\
+Reddit & 171698 & 1717/8585 & base 0.095 & 65/376 (0.4/0.5) & 110/466 (0.7/0.6) & 534/2677 (3.3/3.3) & 151/719 (0.9/0.9) & 350/1435 (2.1/1.8) Slash. \\
+% [batch] control h=0.4 otc: T-LR 0.663 LR d +0.081 (CI>0 2/3, CI<0 0/3) GBDT d -0.025
+% [batch] control h=0.4 alpha: T-LR 0.703 LR d +0.064 (CI>0 1/3, CI<0 0/3) GBDT d -0.021
+% [batch] control h=0.4 epinions: T-LR 0.888 LR d +0.018 (CI>0 3/3, CI<0 0/3) GBDT d +0.019
+% [batch] control h=0.4 slashdot: T-LR 0.719 LR d +0.006 (CI>0 1/3, CI<0 0/3) GBDT d -0.045
+% [batch] control h=0.4 wikirfa: T-LR 0.711 LR d -0.013 (CI>0 0/3, CI<0 1/3) GBDT d +0.013
+% [batch] control h=0.4 reddit: T-LR 0.750 LR d -0.019 (CI>0 0/3, CI<0 3/3) GBDT d -0.006
+% [batch] control h=1.0 otc: T-LR 0.663 LR d +0.146 (CI>0 2/3, CI<0 0/3) GBDT d +0.067
+% [batch] control h=1.0 alpha: T-LR 0.703 LR d +0.071 (CI>0 0/3, CI<0 0/3) GBDT d -0.055
+% [batch] control h=1.0 epinions: T-LR 0.888 LR d -0.065 (CI>0 0/3, CI<0 3/3) GBDT d -0.105
+% [batch] control h=1.0 slashdot: T-LR 0.719 LR d +0.003 (CI>0 0/3, CI<0 0/3) GBDT d -0.011
+% [batch] control h=1.0 wikirfa: T-LR 0.711 LR d -0.010 (CI>0 0/3, CI<0 1/3) GBDT d +0.003
+% [batch] control h=1.0 reddit: T-LR 0.750 LR d -0.006 (CI>0 0/3, CI<0 2/3) GBDT d +0.001
+% [batch] few-shot: target k | negatives in training window | T-LR | method mean AUC | mean d vs T-LR (sd over draws) | sources beating T-LR on average
+% fs otc k=0 neg_train 0.0 T-LR 0.619(0.000) T-Deg 0.619 | ZS-LR 0.644 d +0.025(0.000) w2 | WS-LR 0.644 d +0.025(0.000) w2 | Pool-LR 0.644 d +0.025(0.000) w2 | WS-GBDT 0.561 d -0.058(0.000) w1 | best source-method 0.845
+% fs otc k=5 neg_train 3.6 T-LR 0.623(0.088) T-Deg 0.619 | ZS-LR 0.655 d +0.031(0.085) w3 | WS-LR 0.658 d +0.035(0.014) w4 | Pool-LR 0.671 d +0.048(0.072) w3 | WS-GBDT 0.580 d -0.043(0.090) w1 | best source-method 0.839
+% fs otc k=10 neg_train 7.6 T-LR 0.700(0.079) T-Deg 0.619 | ZS-LR 0.652 d -0.048(0.080) w1 | WS-LR 0.721 d +0.020(0.009) w5 | Pool-LR 0.712 d +0.012(0.035) w2 | WS-GBDT 0.589 d -0.111(0.042) w1 | best source-method 0.840
+% fs otc k=25 neg_train 18.6 T-LR 0.729(0.054) T-Deg 0.619 | ZS-LR 0.659 d -0.070(0.057) w1 | WS-LR 0.745 d +0.016(0.007) w4 | Pool-LR 0.721 d -0.008(0.026) w2 | WS-GBDT 0.601 d -0.127(0.038) w1 | best source-method 0.841
+% fs otc k=50 neg_train 37.3 T-LR 0.740(0.027) T-Deg 0.619 | ZS-LR 0.657 d -0.083(0.028) w1 | WS-LR 0.750 d +0.010(0.004) w4 | Pool-LR 0.717 d -0.023(0.016) w1 | WS-GBDT 0.619 d -0.121(0.023) w0 | best source-method 0.843
+% fs otc k=100 neg_train 75.8 T-LR 0.772(0.020) T-Deg 0.619 | ZS-LR 0.667 d -0.105(0.023) w1 | WS-LR 0.778 d +0.006(0.003) w4 | Pool-LR 0.739 d -0.033(0.011) w1 | WS-GBDT 0.646 d -0.126(0.026) w0 | best source-method 0.843
+% fs alpha k=0 neg_train 0.0 T-LR 0.588(0.000) T-Deg 0.588 | ZS-LR 0.594 d +0.006(0.000) w1 | WS-LR 0.594 d +0.006(0.000) w1 | Pool-LR 0.601 d +0.014(0.000) w2 | WS-GBDT 0.551 d -0.037(0.000) w1 | best source-method 0.779
+% fs alpha k=5 neg_train 3.0 T-LR 0.599(0.070) T-Deg 0.588 | ZS-LR 0.591 d -0.008(0.095) w1 | WS-LR 0.624 d +0.025(0.034) w4 | Pool-LR 0.631 d +0.032(0.060) w2 | WS-GBDT 0.585 d -0.014(0.032) w2 | best source-method 0.795
+% fs alpha k=10 neg_train 6.3 T-LR 0.605(0.048) T-Deg 0.588 | ZS-LR 0.600 d -0.005(0.062) w2 | WS-LR 0.652 d +0.048(0.035) w4 | Pool-LR 0.656 d +0.051(0.055) w4 | WS-GBDT 0.582 d -0.022(0.036) w1 | best source-method 0.811
+% fs alpha k=25 neg_train 16.1 T-LR 0.659(0.023) T-Deg 0.588 | ZS-LR 0.627 d -0.033(0.026) w2 | WS-LR 0.722 d +0.063(0.017) w4 | Pool-LR 0.699 d +0.039(0.040) w3 | WS-GBDT 0.594 d -0.065(0.025) w1 | best source-method 0.843
+% fs alpha k=50 neg_train 32.9 T-LR 0.710(0.040) T-Deg 0.588 | ZS-LR 0.638 d -0.072(0.039) w1 | WS-LR 0.734 d +0.024(0.024) w4 | Pool-LR 0.702 d -0.008(0.042) w2 | WS-GBDT 0.631 d -0.079(0.038) w1 | best source-method 0.852
+% fs alpha k=100 neg_train 49.0 T-LR 0.732(0.000) T-Deg 0.588 | ZS-LR 0.643 d -0.089(0.000) w1 | WS-LR 0.753 d +0.021(0.000) w4 | Pool-LR 0.705 d -0.027(0.000) w1 | WS-GBDT 0.642 d -0.090(0.000) w1 | best source-method 0.855
+% fs epinions k=0 neg_train 0.0 T-LR 0.665(0.000) T-Deg 0.665 | ZS-LR 0.580 d -0.085(0.000) w2 | WS-LR 0.580 d -0.085(0.000) w2 | Pool-LR 0.584 d -0.081(0.000) w2 | WS-GBDT 0.554 d -0.111(0.000) w1 | best source-method 0.741
+% fs epinions k=5 neg_train 2.0 T-LR 0.721(0.071) T-Deg 0.665 | ZS-LR 0.579 d -0.142(0.071) w1 | WS-LR 0.700 d -0.021(0.017) w1 | Pool-LR 0.668 d -0.053(0.045) w0 | WS-GBDT 0.555 d -0.165(0.071) w0 | best source-method 0.733
+% fs epinions k=10 neg_train 3.7 T-LR 0.730(0.055) T-Deg 0.665 | ZS-LR 0.579 d -0.151(0.055) w1 | WS-LR 0.713 d -0.017(0.013) w0 | Pool-LR 0.696 d -0.034(0.031) w0 | WS-GBDT 0.556 d -0.174(0.055) w0 | best source-method 0.730
+% fs epinions k=25 neg_train 11.1 T-LR 0.748(0.035) T-Deg 0.665 | ZS-LR 0.578 d -0.170(0.034) w0 | WS-LR 0.732 d -0.015(0.018) w0 | Pool-LR 0.709 d -0.038(0.015) w0 | WS-GBDT 0.646 d -0.102(0.049) w0 | best source-method 0.745
+% fs epinions k=50 neg_train 24.4 T-LR 0.765(0.030) T-Deg 0.665 | ZS-LR 0.577 d -0.188(0.031) w0 | WS-LR 0.758 d -0.007(0.004) w0 | Pool-LR 0.737 d -0.028(0.019) w0 | WS-GBDT 0.703 d -0.062(0.031) w0 | best source-method 0.762
+% fs epinions k=100 neg_train 46.2 T-LR 0.754(0.026) T-Deg 0.665 | ZS-LR 0.577 d -0.177(0.026) w0 | WS-LR 0.752 d -0.002(0.004) w1 | Pool-LR 0.739 d -0.015(0.010) w1 | WS-GBDT 0.685 d -0.068(0.052) w0 | best source-method 0.754
+% fs slashdot k=0 neg_train 0.0 T-LR 0.525(0.000) T-Deg 0.525 | ZS-LR 0.546 d +0.021(0.000) w4 | WS-LR 0.546 d +0.021(0.000) w4 | Pool-LR 0.547 d +0.023(0.000) w4 | WS-GBDT 0.542 d +0.017(0.000) w5 | best source-method 0.573
+% fs slashdot k=5 neg_train 2.6 T-LR 0.517(0.038) T-Deg 0.525 | ZS-LR 0.545 d +0.028(0.038) w4 | WS-LR 0.530 d +0.013(0.012) w5 | Pool-LR 0.528 d +0.010(0.020) w5 | WS-GBDT 0.541 d +0.024(0.038) w5 | best source-method 0.570
+% fs slashdot k=10 neg_train 5.5 T-LR 0.554(0.027) T-Deg 0.525 | ZS-LR 0.545 d -0.009(0.028) w2 | WS-LR 0.552 d -0.002(0.010) w3 | Pool-LR 0.551 d -0.003(0.008) w2 | WS-GBDT 0.542 d -0.013(0.027) w1 | best source-method 0.566
+% fs slashdot k=25 neg_train 14.4 T-LR 0.559(0.029) T-Deg 0.525 | ZS-LR 0.545 d -0.014(0.029) w1 | WS-LR 0.558 d -0.001(0.006) w2 | Pool-LR 0.559 d -0.001(0.008) w3 | WS-GBDT 0.547 d -0.012(0.021) w0 | best source-method 0.566
+% fs slashdot k=50 neg_train 29.5 T-LR 0.583(0.012) T-Deg 0.525 | ZS-LR 0.544 d -0.039(0.012) w0 | WS-LR 0.577 d -0.006(0.004) w1 | Pool-LR 0.581 d -0.002(0.006) w2 | WS-GBDT 0.553 d -0.030(0.009) w0 | best source-method 0.593
+% fs slashdot k=100 neg_train 57.4 T-LR 0.584(0.020) T-Deg 0.525 | ZS-LR 0.545 d -0.038(0.020) w0 | WS-LR 0.579 d -0.005(0.004) w0 | Pool-LR 0.582 d -0.002(0.007) w3 | WS-GBDT 0.553 d -0.031(0.016) w0 | best source-method 0.594
+% fs wikirfa k=0 neg_train 0.0 T-LR 0.654(0.000) T-Deg 0.654 | ZS-LR 0.598 d -0.055(0.000) w1 | WS-LR 0.598 d -0.055(0.000) w1 | Pool-LR 0.592 d -0.062(0.000) w1 | WS-GBDT 0.526 d -0.127(0.000) w0 | best source-method 0.672
+% fs wikirfa k=5 neg_train 2.7 T-LR 0.539(0.113) T-Deg 0.654 | ZS-LR 0.599 d +0.060(0.114) w4 | WS-LR 0.570 d +0.031(0.052) w5 | Pool-LR 0.579 d +0.040(0.058) w5 | WS-GBDT 0.534 d -0.006(0.113) w2 | best source-method 0.672
+% fs wikirfa k=10 neg_train 5.6 T-LR 0.633(0.057) T-Deg 0.654 | ZS-LR 0.599 d -0.034(0.058) w1 | WS-LR 0.631 d -0.002(0.022) w2 | Pool-LR 0.627 d -0.005(0.017) w2 | WS-GBDT 0.538 d -0.095(0.058) w0 | best source-method 0.671
+% fs wikirfa k=25 neg_train 14.7 T-LR 0.644(0.028) T-Deg 0.654 | ZS-LR 0.601 d -0.043(0.030) w1 | WS-LR 0.631 d -0.013(0.008) w2 | Pool-LR 0.626 d -0.018(0.018) w0 | WS-GBDT 0.613 d -0.031(0.024) w1 | best source-method 0.670
+% fs wikirfa k=50 neg_train 30.0 T-LR 0.664(0.020) T-Deg 0.654 | ZS-LR 0.603 d -0.061(0.021) w1 | WS-LR 0.657 d -0.008(0.008) w1 | Pool-LR 0.659 d -0.006(0.011) w1 | WS-GBDT 0.666 d +0.001(0.019) w4 | best source-method 0.681
+% fs wikirfa k=100 neg_train 58.3 T-LR 0.683(0.013) T-Deg 0.654 | ZS-LR 0.605 d -0.078(0.014) w0 | WS-LR 0.678 d -0.006(0.003) w1 | Pool-LR 0.666 d -0.017(0.008) w0 | WS-GBDT 0.663 d -0.021(0.019) w0 | best source-method 0.684
+% fs reddit k=0 neg_train 0.0 T-LR 0.421(0.000) T-Deg 0.421 | ZS-LR 0.472 d +0.051(0.000) w4 | WS-LR 0.472 d +0.051(0.000) w4 | Pool-LR 0.465 d +0.044(0.000) w4 | WS-GBDT 0.481 d +0.060(0.000) w4 | best source-method 0.630
+% fs reddit k=5 neg_train 2.0 T-LR 0.540(0.086) T-Deg 0.421 | ZS-LR 0.470 d -0.070(0.088) w1 | WS-LR 0.530 d -0.010(0.027) w1 | Pool-LR 0.521 d -0.019(0.086) w0 | WS-GBDT 0.479 d -0.061(0.088) w1 | best source-method 0.605
+% fs reddit k=10 neg_train 4.0 T-LR 0.531(0.083) T-Deg 0.421 | ZS-LR 0.475 d -0.055(0.082) w1 | WS-LR 0.532 d +0.001(0.011) w2 | Pool-LR 0.529 d -0.001(0.028) w2 | WS-GBDT 0.534 d +0.003(0.049) w4 | best source-method 0.594
+% fs reddit k=25 neg_train 11.7 T-LR 0.555(0.049) T-Deg 0.421 | ZS-LR 0.476 d -0.079(0.051) w0 | WS-LR 0.554 d -0.001(0.004) w2 | Pool-LR 0.558 d +0.003(0.024) w2 | WS-GBDT 0.549 d -0.006(0.037) w4 | best source-method 0.596
+% fs reddit k=50 neg_train 24.9 T-LR 0.647(0.027) T-Deg 0.421 | ZS-LR 0.481 d -0.166(0.029) w0 | WS-LR 0.638 d -0.008(0.005) w2 | Pool-LR 0.628 d -0.018(0.017) w2 | WS-GBDT 0.570 d -0.077(0.021) w0 | best source-method 0.650
+% fs reddit k=100 neg_train 47.9 T-LR 0.674(0.011) T-Deg 0.421 | ZS-LR 0.482 d -0.192(0.011) w0 | WS-LR 0.669 d -0.004(0.005) w1 | Pool-LR 0.645 d -0.028(0.008) w0 | WS-GBDT 0.581 d -0.093(0.013) w0 | best source-method 0.674
+% check4 T-LR batch -> forecast: OTC 0.779->0.575 Alpha 0.732->0.598 Epin. 0.893->0.904 Slash. 0.731->0.721 RfA 0.731->0.690 Reddit 0.760->0.759
+% check4 T-Deg batch -> forecast: OTC 0.619->0.584 Alpha 0.588->0.551 Epin. 0.665->0.650 Slash. 0.525->0.526 RfA 0.654->0.542 Reddit 0.421->0.422
+% check4 activity-only T-LR batch -> forecast: OTC 0.751->0.638 Alpha 0.773->0.566 Epin. 0.740->0.738 Slash. 0.579->0.534 RfA 0.659->0.644 Reddit 0.683->0.678
+% check4 LR transfer batch -> forecast, Bitcoin pair: otc->alpha 0.855->0.665 alpha->otc 0.842->0.663
+% check4 mean T-LR timestamped: batch 0.751 forecast 0.655
+% check4 mean T-LR file-order: batch 0.812 forecast 0.813
+% [batch] LR-U minus T-Deg: mean -0.013 [-0.073, +0.065]
+% [batch] audit means over pairs: {'rep': 0.5684348252675748, 'rep_test_leak': 0.7311095309556305, 'rep_train_leak': 0.674685539860253}; train leak higher on 23 pairs
+% [batch] history h=0.2: AUC 0.579 d vs T-LR -0.192
+% [batch] history h=0.5: AUC 0.622 d vs T-LR -0.149
+% [batch] history h=0.8: AUC 0.607 d vs T-LR -0.164
+% [batch] history h=1.0: AUC 0.617 d vs T-LR -0.154
+% [batch] construction receiver_given__own_label_True__source_scaler_raw: mean30 0.531
+% [batch] construction receiver_given__own_label_False__source_scaler_raw: mean30 0.505
+% [batch] construction receiver_received__own_label_True__source_scaler_raw: mean30 0.616
+% [batch] construction receiver_received__own_label_False__source_scaler_raw: mean30 0.497
+% [batch] construction receiver_given__own_label_True__per_domain_log: mean30 0.570
+% [batch] construction receiver_given__own_label_False__per_domain_log: mean30 0.538
+% [batch] construction receiver_received__own_label_True__per_domain_log: mean30 0.640
+% [batch] construction receiver_received__own_label_False__per_domain_log: mean30 0.582
+% [batch] check1 OTC: T-Rep 0.581 leaked 0.912 (+0.331)
+% [batch] check1 Alpha: T-Rep 0.538 leaked 0.897 (+0.359)
+% [batch] check1 Epin.: T-Rep 0.853 leaked 0.927 (+0.074)
+% [batch] check1 Slash.: T-Rep 0.678 leaked 0.826 (+0.148)
+% [batch] check1 RfA: T-Rep 0.503 leaked 0.886 (+0.383)
+% [batch] check1 Reddit: T-Rep 0.572 leaked 0.677 (+0.106)
+% ye ye2013_transfer.json: otc->alpha ye_tradaboost AUC 0.700
+% ye ye2013_transfer.json: otc->alpha ye_source_only_lr AUC 0.540
+% ye ye2013_transfer.json: alpha->otc ye_tradaboost AUC 0.472
+% ye ye2013_transfer.json: alpha->otc ye_source_only_lr AUC 0.508
+% ye ye2013_transfer.json: otc->epinions ye_tradaboost AUC 0.707
+% ye ye2013_transfer.json: otc->epinions ye_source_only_lr AUC 0.516
+% ye ye2013_transfer.json: alpha->epinions ye_tradaboost AUC 0.639
+% ye ye2013_transfer.json: alpha->epinions ye_source_only_lr AUC 0.517
+% ye ye2013_transfer.json: otc->wikirfa ye_tradaboost AUC 0.489
+% ye ye2013_transfer.json: otc->wikirfa ye_source_only_lr AUC 0.436
+% ye ye2013_transfer.json: alpha->wikirfa ye_tradaboost AUC 0.490
+% ye ye2013_transfer.json: alpha->wikirfa ye_source_only_lr AUC 0.442
+% ye ye2013_transfer_cap30000.json: otc->epinions ye_tradaboost AUC 0.752
+% ye ye2013_transfer_cap30000.json: otc->epinions ye_source_only_lr AUC 0.459
+% ye ye2013_transfer_cap30000.json: alpha->epinions ye_tradaboost AUC 0.752
+% ye ye2013_transfer_cap30000.json: alpha->epinions ye_source_only_lr AUC 0.462

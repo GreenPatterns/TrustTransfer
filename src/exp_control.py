@@ -23,13 +23,17 @@ def run(name, h):
         half = np.random.default_rng(sd).permutation(g.n)[: g.n // 2]
         rest = np.setdiff1d(np.arange(g.n), half)
         a, b = tt.subgraph(g, half, "A"), tt.subgraph(g, rest, "B")
-        sv, tv, fv = tt.source_view(a, h), tt.target_view(b), tt.target_fit_view(b)
+        if E.STRICT:
+            sv, tv, fv = tt.source_view_strict(a, h), tt.target_view_strict(b), tt.target_fit_view_strict(b)
+        else:
+            sv, tv, fv = tt.source_view(a, h), tt.target_view(b), tt.target_fit_view(b)
         xs, xt, xf = tt.features(sv), tt.features(tv), tt.features(fv)
         ys, yt, yf = a.y[sv.score], b.y[tv.score], b.y[fv.score]
-        t_lr = tt.fit_predict("lr", E.zs(xf, E.ALL), yf, E.zs(xt, E.ALL))
+        zt = tt.zscore_ref(xt, xf) if E.STRICT else E.zs(xt, E.ALL)
+        t_lr = tt.fit_predict("lr", E.zs(xf, E.ALL), yf, zt)
         row = {"edges_A": a.m, "edges_B": b.m, "T-LR": tt.auc(t_lr, yt)}
         for model in ("lr", "gbdt"):
-            sc = tt.fit_predict(model, E.zs(xs, E.ALL), ys, E.zs(xt, E.ALL))
+            sc = tt.fit_predict(model, E.zs(xs, E.ALL), ys, zt)
             row[model] = tt.paired_delta(sc, t_lr, yt, b.s[tv.score], b=200, seed=sd)
             row[model]["auc"] = tt.auc(sc, yt)
         rows.append(row)
@@ -41,4 +45,5 @@ if __name__ == "__main__":
     h = float(sys.argv[1]) if len(sys.argv) > 1 else 1.0
     res = {n: run(n, h) for n in tt.GRAPHS}
     out = "control.json" if h == 1.0 else f"control_h{h}.json"
-    json.dump(res, open(os.path.join(tt.RESULTS, out), "w"), indent=1)
+    os.makedirs(E.OUT, exist_ok=True)
+    json.dump(res, open(os.path.join(E.OUT, out), "w"), indent=1)

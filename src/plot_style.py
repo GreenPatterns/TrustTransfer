@@ -1,5 +1,6 @@
-"""Shared matplotlib style for the paper's figures: Computer Modern serif to
-match LNCS body text, sizes for a 122 mm text width, vector PDF output."""
+"""Shared matplotlib style for the paper's figures: STIX (Times-like) serif with
+Unicode-mapped glyphs, so minus signs and Greek letters survive in the PDF text
+layer; sizes for a 122 mm text width, vector PDF output."""
 import json
 import os
 
@@ -11,8 +12,8 @@ import matplotlib.pyplot as plt  # noqa: E402
 import tt  # noqa: E402
 
 matplotlib.rcParams.update({
-    "font.family": "serif", "font.serif": ["cmr10"], "mathtext.fontset": "cm",
-    "axes.formatter.use_mathtext": True, "axes.unicode_minus": False,
+    "font.family": "STIXGeneral", "mathtext.fontset": "stix",
+    "axes.formatter.use_mathtext": False, "axes.unicode_minus": True,
     "font.size": 7, "axes.labelsize": 7, "xtick.labelsize": 6, "ytick.labelsize": 6,
     "legend.fontsize": 6, "axes.spines.top": False, "axes.spines.right": False,
     "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6,
