@@ -76,7 +76,7 @@ bash run_all.sh
 | Paper element | Script (in `src/` unless noted) | Output in `results/` | Approx. time |
 |---------------|--------------------------------|----------------------|--------------|
 | Table 2, Fig. 2c, Checks 3–4 data facts | `exp_data.py` | `data_audit.json` | 1 min |
-| Check 2 (construction choices) | `exp_construction.py` | `construction.json` | 1 min |
+| Feature-construction audit (supporting analysis, not reported in the paper) | `exp_construction.py` | `construction.json` | 1 min |
 | Table 3, Figs. 2a–b, 2d, 3, 5a, Table 5 | `exp_transfer.py` (both rules) | `[strict/]transfer.json`, `[strict/]targets.json` | 2–3 h each |
 | GNN, GNN+DGI, SGCN rows; T-GNN, T-SGCN | `exp_gnn.py GNN,GNN-DGI,SGCN gnn.json` | `[strict/]gnn.json` (batch SGCN: `sgcn.json`) | 1–2 h (GPU) |
 | Table 4 (transfer AUC per pair and feature group) | `exp_families.py` | `[strict/]families.json` | 10 min |

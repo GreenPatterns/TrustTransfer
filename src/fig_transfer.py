@@ -11,7 +11,7 @@ import tt
 def main():
     pairs = load("strict/transfer.json")
     c04, c10 = load("strict/control_h0.4.json"), load("strict/control.json")
-    fig, (ax, bx) = plt.subplots(1, 2, figsize=(WIDTH, 1.52), gridspec_kw={"width_ratios": [1, 1.25]})
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(WIDTH, 1.62), gridspec_kw={"width_ratios": [1, 1.25]})
     m = np.full((6, 6), np.nan)
     for i, s in enumerate(tt.GRAPHS):
         for j, t in enumerate(tt.GRAPHS):
