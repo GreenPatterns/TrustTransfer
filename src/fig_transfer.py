@@ -9,7 +9,7 @@ import tt
 
 def main():
     pairs, bud = load("transfer.json"), load("budget.json")
-    fig, (ax, bx) = plt.subplots(1, 2, figsize=(WIDTH, 1.85), gridspec_kw={"width_ratios": [1, 1.2]})
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(WIDTH, 1.7), gridspec_kw={"width_ratios": [1, 1.2]})
     m = np.full((6, 6), np.nan)
     for i, s in enumerate(tt.GRAPHS):
         for j, t in enumerate(tt.GRAPHS):

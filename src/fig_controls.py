@@ -13,7 +13,7 @@ def main():
     c04, c10, pairs = load("control_h0.4.json"), load("control.json"), load("transfer.json")
     g = tt.GRAPHS
     x = np.arange(len(g))
-    fig, (ax, bx) = plt.subplots(1, 2, figsize=(WIDTH, 1.7), gridspec_kw={"width_ratios": [1.5, 1]})
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(WIDTH, 1.55), gridspec_kw={"width_ratios": [1.5, 1]})
     for off, ctrl, col, lab in ((-0.2, c04, C_SAME, "target window ($h{=}0.4$)"),
                                 (0.2, c10, "#bbbbbb", "full history ($h{=}1$)")):
         d = np.array([[r["lr"]["delta"] for r in ctrl[t]] for t in g])

@@ -12,7 +12,7 @@ def main():
     targets, pairs, data = load("targets.json"), load("transfer.json"), load("data_audit.json")
     g = tt.GRAPHS
     x = np.arange(len(g))
-    fig, axes = plt.subplots(1, 3, figsize=(WIDTH, 1.75), gridspec_kw={"width_ratios": [1, 1.15, 1.35]})
+    fig, axes = plt.subplots(1, 3, figsize=(WIDTH, 1.6), gridspec_kw={"width_ratios": [1, 1.15, 1.35]})
 
     ax = axes[0]
     corr = [targets[t]["T-rep"]["auc"] for t in g]

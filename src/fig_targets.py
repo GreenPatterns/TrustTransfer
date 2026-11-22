@@ -11,7 +11,7 @@ METHODS = ["LR", "GBDT", "CORAL", "DANN", "GNN", "GNN-DGI"]
 
 def main():
     pairs, gnn, targets = load("transfer.json"), load("gnn.json"), load("targets.json")
-    fig, ax = plt.subplots(figsize=(WIDTH, 1.75))
+    fig, ax = plt.subplots(figsize=(WIDTH, 1.6))
     rng = np.random.default_rng(0)
     for i, t in enumerate(tt.GRAPHS):
         for s in tt.GRAPHS:
