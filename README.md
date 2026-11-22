@@ -1,7 +1,6 @@
-# When Is Trust Portable? Artifacts
+# Borrowing Trust Predictions Across Platforms: Artifacts
 
-Code, data scripts and stored results for the paper *When Is Trust Portable? A
-Leakage-Audited Study of Cross-Platform Signed-Edge Prediction*.
+Code, data scripts and stored results for the paper *Borrowing Trust Predictions Across Platforms Without Shared Users: A Leakage-Free Evaluation Finds Gains Only for Same-Kind Platforms or Very Few Labels*.
 
 The study asks when a model that predicts trust (+) or distrust (−) ratings, trained
 on one platform, helps a new platform that shares no users with it. Every method
