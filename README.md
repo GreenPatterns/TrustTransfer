@@ -1,6 +1,6 @@
-# Borrowing Trust Predictions Across Platforms: Artifacts
+# Identity-Free Cross-Platform Trust Transfer: Artifacts
 
-Code, data scripts and stored results for the paper *Borrowing Trust Predictions Across Platforms Without Shared Users: A Leakage-Free Evaluation Finds Gains Only for Same-Kind Platforms or Very Few Labels*.
+Code, data scripts and stored results for the paper *Identity-Free Cross-Platform Trust Transfer: A Leakage-Controlled Evaluation on Signed Networks*.
 
 The study asks when a model that predicts trust (+) or distrust (−) ratings, trained
 on one platform, helps a new platform that shares no users with it. Every method
