@@ -12,7 +12,7 @@ BITCOIN = {("otc", "alpha"), ("alpha", "otc")}
 
 def main():
     pairs, gnn, targets = load("strict/transfer.json"), load("strict/gnn.json"), load("strict/targets.json")
-    fig, ax = plt.subplots(figsize=(WIDTH, 1.5))
+    fig, ax = plt.subplots(figsize=(WIDTH, 1.4))
     rng = np.random.default_rng(0)
     for i, t in enumerate(tt.GRAPHS):
         for s in tt.GRAPHS:
