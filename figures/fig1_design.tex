@@ -1,0 +1,38 @@
+% Fig. 1: study overview (access contract, comparison, audited leaks).
+\begin{tikzpicture}[x=1cm, y=1cm, font=\scriptsize, >={Stealth[length=4pt]},
+  seg/.style={draw=black!60, minimum height=0.46cm, inner sep=0pt, outer sep=0pt, anchor=south west, align=center},
+  box/.style={draw=black!70, rounded corners=2pt, align=center, inner sep=2.5pt, fill=white},
+  leak/.style={circle, draw=red!75!black, fill=red!8, text=red!75!black, inner sep=0pt,
+               minimum size=0.34cm, font=\tiny\bfseries},
+  tick/.style={font=\tiny, text=black!70, anchor=north, inner sep=1pt}]
+% ---------------- source platform
+\node[anchor=south west, inner sep=0pt] at (0,0.95) {\textbf{Source $G_S$}: mature platform, history $[0,h)$};
+\node[seg, fill=blue!10, minimum width=2.4cm] (s1) at (0,0) {signs readable};
+\node[seg, fill=blue!32, minimum width=2.4cm] (s2) at (2.4,0) {fit edges};
+\foreach \x/\l in {0/{$0$}, 2.4/{$h/2$}, 4.8/{$h$}} \node[tick] at (\x,0) {\l};
+% ---------------- target platform
+\node[anchor=south west, inner sep=0pt] at (6.6,0.95) {\textbf{Target $G_T$}: new platform, $V_S\cap V_T=\emptyset$};
+\node[seg, fill=green!10, minimum width=0.9cm] (t1) at (6.6,0) {signs};
+\node[seg, fill=green!32, minimum width=0.9cm] (t2) at (7.5,0) {fit};
+\node[seg, fill=orange!30, minimum width=1.8cm] (t3) at (8.4,0) {test, signs\\[-1pt]hidden};
+\node[seg, fill=black!5, draw=black!35, dashed, minimum width=1.6cm, text=black!55] (t4) at (10.2,0) {not used};
+\foreach \x/\l in {6.6/{$0$}, 7.5/{$0.1$}, 8.4/{$0.2$}, 10.2/{$0.4$}, 11.8/{$1$}} \node[tick] at (\x,0) {\l};
+\draw[decorate, decoration={brace, amplitude=3pt}, black!70] (6.62,0.52) -- (8.38,0.52)
+  node[midway, above=2pt, font=\tiny] {readable prefix (20\%)};
+% ---------------- models and comparison
+\node[box, minimum width=4.4cm] (f) at (2.6,-0.95)
+  {\textbf{transfer model} fitted on the source\\LR, GBDT, CORAL, DANN, pooled LR,\\V-REx, GNN, GNN+DGI (identity-free)};
+\node[box, minimum width=2.6cm] (tlr) at (7.55,-0.95) {\textbf{T-LR}: same features,\\fitted on target prefix only};
+\node[box] (cmp) at (9.0,-1.85)
+  {\textbf{paired} $\Delta$AUC $=$ AUC(transfer) $-$ AUC(T-LR)\\on the same test edges; rater bootstrap};
+\draw[->] (3.6,-0.2) -- node[right, font=\tiny] {fit} (3.6,-0.5);
+\draw[->] (7.95,-0.2) -- node[right, font=\tiny] {fit} (7.95,-0.6);
+\draw[->] (9.75,-0.2) -- node[right, font=\tiny, align=left] {score} (9.75,-1.48);
+\draw[->] (f.south) |- node[pos=0.72, below, font=\tiny, align=center] {applied to target features\\(prefix signs only, no target fitting)} (cmp.west);
+\draw[->] (tlr.south) -- (tlr.south |- cmp.north);
+% ---------------- audited leaks
+\node[leak] at (4.8,0.46) {2};
+\node[leak] at (10.2,0.46) {1};
+\draw[red!75!black, dashed] (4.95,0.23) -- (6.45,0.23);
+\node[leak, fill=white] at (5.7,0.23) {3};
+\end{tikzpicture}

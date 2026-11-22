@@ -17,7 +17,7 @@ first 20% of ratings.
 | `src/deep.py` | DANN, V-REx, inductive relational GNN, Deep Graph Infomax pretraining |
 | `src/exp_*.py` | One script per experiment; each writes JSON to `results/` |
 | `src/make_tables.py` | Prints every number in the paper's tables and text to `results/tables.txt` |
-| `src/fig_*.py`, `src/plot_style.py` | Draw Figures 2–5 into `figures/` |
+| `src/fig_*.py`, `src/plot_style.py` | Draw Figures 2–5 into `figures/`; Figure 1's TikZ sources are in `figures/` too |
 | `src/test_tt.py` | Leakage unit tests: flipping a scored label must change no feature |
 | `ye2013/` | Rebuild of Ye et al. (WWW 2013), the closest prior method |
 | `results/` | Stored outputs of every experiment, so tables and figures regenerate in seconds |
@@ -78,7 +78,7 @@ bash run_all.sh
 | All numbers | `make_tables.py` | `tables.txt` | seconds |
 | Figures 2–5 | `fig_*.py` | `../figures/*.pdf` | seconds |
 
-Figure 1 is a diagram drawn in the paper's LaTeX source. All randomness is seeded.
+Figure 1 is a TikZ diagram: `figures/fig1_problem.tex` (top, the problem) and `figures/fig1_design.tex` (bottom, the study design); include both with `\input` and load `tikz` with the `arrows.meta` and `decorations.pathreplacing` libraries. All randomness is seeded.
 The feature models are deterministic. GPU runs of the neural models can differ in the
 third decimal.
 
