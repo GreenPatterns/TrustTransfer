@@ -14,7 +14,7 @@ METHODS = (("ZS-LR", "#ff7f0e", "zero-shot LR"), ("WS-LR", "#1f77b4", "warm-star
 
 def main(name="strict/fewshot.json", out="fewshot"):
     fs, targets = load(name), load(name.replace("fewshot", "targets"))
-    fig, axes = plt.subplots(2, 3, figsize=(WIDTH, 1.85), sharex=True)
+    fig, axes = plt.subplots(2, 3, figsize=(WIDTH, 1.78), sharex=True)
     for ax, t in zip(axes.ravel(), tt.GRAPHS):
         ks = sorted(fs[t]["budgets"], key=int)
         x = np.arange(len(ks))

@@ -15,7 +15,7 @@ def main():
     strict = load("strict/targets.json")
     g = tt.GRAPHS
     x = np.arange(len(g))
-    fig, axes = plt.subplots(1, 4, figsize=(WIDTH, 1.5), gridspec_kw={"width_ratios": [1, 1.12, 1.3, 1]})
+    fig, axes = plt.subplots(1, 4, figsize=(WIDTH, 1.44), gridspec_kw={"width_ratios": [1, 1.12, 1.3, 1]})
 
     ax = axes[0]
     corr = [targets[t]["T-rep"]["auc"] for t in g]
