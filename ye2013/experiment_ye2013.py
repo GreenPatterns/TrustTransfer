@@ -40,6 +40,9 @@ from ye_data import RESULTS_ROOT, load_dataset
 SEEDS = (42, 123, 456)
 # NMTF covers the CAP highest-degree nodes (default 3000; YE_CAP=30000 is the coverage check)
 CAP = int(os.environ.get("YE_CAP", "3000"))
+# YE_RANK=total ranks users by ratings given plus received (covers receivers too);
+# the default ranks by ratings given (row sums), as in the main runs
+RANK = os.environ.get("YE_RANK", "given")
 K_LATENT = 20
 N_BOOST = 15
 BETWEENNESS_SAMPLES = 200  # pivot sample for approximate betweenness
@@ -161,6 +164,12 @@ def nmtf_shared(As, At, k, rng, iters=60, alpha=0.1):
     return Us, Vs, Ut, Vt
 
 
+def activity(a):
+    """Ranking score for the users the factorisation covers (see RANK)."""
+    given = np.asarray(a.sum(1)).ravel()
+    return given + np.asarray(a.sum(0)).ravel() if RANK == "total" else given
+
+
 def adjacency(edges, num_nodes):
     d = np.ones(len(edges))
     return csr_matrix((d, (edges[:, 0], edges[:, 1])), shape=(num_nodes, num_nodes))
@@ -237,8 +246,8 @@ def run_pair(source, target, seed, use_latent=True):
         # factorization to the top-degree induced subgraph and back off to
         # zeros for nodes outside it.
         cap = CAP
-        s_keep = np.argsort(-np.asarray(As.sum(1)).ravel())[:cap]
-        t_keep = np.argsort(-np.asarray(At.sum(1)).ravel())[:cap]
+        s_keep = np.argsort(-activity(As))[:cap]
+        t_keep = np.argsort(-activity(At))[:cap]
         Asd = np.asarray(As[s_keep][:, s_keep].todense(), dtype=np.float64)
         Atd = np.asarray(At[t_keep][:, t_keep].todense(), dtype=np.float64)
         Us_s, Vs_s, Ut_s, Vt_s = nmtf_shared(Asd, Atd, K_LATENT, rng)
@@ -276,7 +285,8 @@ PAIRS = [("otc", "alpha"), ("alpha", "otc"), ("otc", "epinions"),
          ("alpha", "epinions"), ("otc", "wikirfa"), ("alpha", "wikirfa")]
 if os.environ.get("YE_PAIRS"):   # e.g. YE_PAIRS=otc-epinions,alpha-epinions
     PAIRS = [tuple(p.split("-")) for p in os.environ["YE_PAIRS"].split(",")]
-OUT_NAME = "ye2013_transfer.json" if CAP == 3000 else f"ye2013_transfer_cap{CAP}.json"
+OUT_NAME = ("ye2013_transfer.json" if CAP == 3000 and RANK == "given"
+            else f"ye2013_transfer_cap{CAP}{'_total' if RANK == 'total' else ''}.json")
 
 if __name__ == "__main__":
     d = os.path.join(RESULTS_ROOT, "ye2013")

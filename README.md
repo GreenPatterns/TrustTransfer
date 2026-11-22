@@ -82,7 +82,7 @@ bash run_all.sh
 | Table 4 (transfer AUC per pair and feature group) | `exp_families.py` | `[strict/]families.json` | 10 min |
 | Fig. 4 (few-shot, fixed negative-label budgets) | `exp_fewshot.py [target ...]` | `[strict/]fewshot.json` | 1–3 h per target |
 | Fig. 5b (positive control) | `exp_control.py 0.4`, `exp_control.py` | `[strict/]control_h0.4.json`, `[strict/]control.json` | 30 min each |
-| Sec. 4.5 (Ye et al., adapted) | `ye2013/experiment_ye2013.py` (`YE_CAP=30000` for the coverage check) | `ye2013/ye2013_transfer[_cap30000].json` | several hours |
+| Sec. 4.5 (Ye et al., adapted) | `ye2013/experiment_ye2013.py`; full coverage: `YE_CAP=50000 YE_RANK=total YE_PAIRS=otc-epinions,alpha-epinions`; `ye2013/coverage_ye2013.py` | `ye2013/ye2013_transfer.json`, `ye2013_transfer_cap50000_total.json`, `coverage.json` | several hours |
 | All numbers | `make_tables.py` | `tables.txt` | seconds |
 | Figures 2–5 | `fig_*.py` | `../figures/*.pdf` | seconds |
 

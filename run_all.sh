@@ -20,6 +20,6 @@ for contract in batch strict; do
 done
 unset TT_CONTRACT
 python ../ye2013/experiment_ye2013.py
-(cd ../ye2013 && YE_CAP=30000 YE_PAIRS=otc-epinions,alpha-epinions python experiment_ye2013.py)
+(cd ../ye2013 && YE_CAP=50000 YE_RANK=total YE_PAIRS=otc-epinions,alpha-epinions python experiment_ye2013.py && python coverage_ye2013.py)
 python make_tables.py
 for f in fig_audits fig_targets fig_transfer fig_fewshot; do python "$f.py"; done

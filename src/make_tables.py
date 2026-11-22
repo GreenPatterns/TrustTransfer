@@ -249,10 +249,13 @@ def data_rows(out):
 
 def ye_rows(out):
     base = os.path.join(R, "ye2013")
-    for name in ("ye2013_transfer.json", "ye2013_transfer_cap30000.json"):
+    for name in ("ye2013_transfer.json", "ye2013_transfer_cap50000_total.json"):
         rows = load(base, name)
         for r in rows or []:
             out.append(f"% ye {name}: {r['source']}->{r['target']} {r['method']} AUC {r['auc_mean']:.3f}")
+    for r in load(base, "coverage.json") or []:
+        out.append(f"% ye coverage {r['target']} cap {r['cap']} rank {r['rank']}: users {r['nodes_covered']:.3f}, "
+                   f"test ratings with both users covered {r['test_ratings_both_users_covered']:.3f}")
 
 
 def contract(d):

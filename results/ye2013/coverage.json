@@ -1,0 +1,44 @@
+[
+ {
+  "target": "alpha",
+  "cap": 3000,
+  "rank": "given",
+  "nodes_covered": 0.7930214115781126,
+  "test_ratings_both_users_covered": 0.9919388176932616
+ },
+ {
+  "target": "otc",
+  "cap": 3000,
+  "rank": "given",
+  "nodes_covered": 0.5101173269852066,
+  "test_ratings_both_users_covered": 0.9511098623208767
+ },
+ {
+  "target": "epinions",
+  "cap": 3000,
+  "rank": "given",
+  "nodes_covered": 0.022756925691051977,
+  "test_ratings_both_users_covered": 0.4258768437191723
+ },
+ {
+  "target": "wikirfa",
+  "cap": 3000,
+  "rank": "given",
+  "nodes_covered": 0.2831524303916942,
+  "test_ratings_both_users_covered": 0.7684457478005865
+ },
+ {
+  "target": "epinions",
+  "cap": 30000,
+  "rank": "given",
+  "nodes_covered": 0.22756925691051977,
+  "test_ratings_both_users_covered": 0.5297431569939504
+ },
+ {
+  "target": "epinions",
+  "cap": 50000,
+  "rank": "total",
+  "nodes_covered": 0.3792820948508663,
+  "test_ratings_both_users_covered": 1.0
+ }
+]

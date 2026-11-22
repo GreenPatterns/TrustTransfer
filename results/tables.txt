@@ -217,7 +217,13 @@ Reddit & 171698 & 1717/8585 & base 0.095 & 65/376 (0.4/0.5) & 110/466 (0.7/0.6) 
 % ye ye2013_transfer.json: otc->wikirfa ye_source_only_lr AUC 0.436
 % ye ye2013_transfer.json: alpha->wikirfa ye_tradaboost AUC 0.490
 % ye ye2013_transfer.json: alpha->wikirfa ye_source_only_lr AUC 0.442
-% ye ye2013_transfer_cap30000.json: otc->epinions ye_tradaboost AUC 0.752
-% ye ye2013_transfer_cap30000.json: otc->epinions ye_source_only_lr AUC 0.459
-% ye ye2013_transfer_cap30000.json: alpha->epinions ye_tradaboost AUC 0.752
-% ye ye2013_transfer_cap30000.json: alpha->epinions ye_source_only_lr AUC 0.462
+% ye ye2013_transfer_cap50000_total.json: otc->epinions ye_tradaboost AUC 0.813
+% ye ye2013_transfer_cap50000_total.json: otc->epinions ye_source_only_lr AUC 0.484
+% ye ye2013_transfer_cap50000_total.json: alpha->epinions ye_tradaboost AUC 0.807
+% ye ye2013_transfer_cap50000_total.json: alpha->epinions ye_source_only_lr AUC 0.430
+% ye coverage alpha cap 3000 rank given: users 0.793, test ratings with both users covered 0.992
+% ye coverage otc cap 3000 rank given: users 0.510, test ratings with both users covered 0.951
+% ye coverage epinions cap 3000 rank given: users 0.023, test ratings with both users covered 0.426
+% ye coverage wikirfa cap 3000 rank given: users 0.283, test ratings with both users covered 0.768
+% ye coverage epinions cap 30000 rank given: users 0.228, test ratings with both users covered 0.530
+% ye coverage epinions cap 50000 rank total: users 0.379, test ratings with both users covered 1.000
