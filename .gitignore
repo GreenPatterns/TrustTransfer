@@ -1,0 +1,8 @@
+data/*.csv
+data/raw/
+results/cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.log
+.ruff_cache/

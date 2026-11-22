@@ -1,0 +1,206 @@
+[
+  {
+    "source": "otc",
+    "target": "alpha",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.7002751246666351,
+    "auc_std": 0.010143546800940423,
+    "mcc_mean": 0.042688885627622596,
+    "f1_mean": 0.9528432599878768,
+    "majority_f1": 0.9848929920268569,
+    "prevalence": 0.9702356345597354,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 21.6
+  },
+  {
+    "source": "otc",
+    "target": "alpha",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.5395925057993657,
+    "auc_std": 0.08976601203169675,
+    "mcc_mean": 0.005657818086976597,
+    "f1_mean": 0.9827164168570367,
+    "majority_f1": 0.9848929920268569,
+    "prevalence": 0.9702356345597354,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 21.6
+  },
+  {
+    "source": "alpha",
+    "target": "otc",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.47196305183407766,
+    "auc_std": 0.1032698216644509,
+    "mcc_mean": 0.015444685201095584,
+    "f1_mean": 0.9285929373886367,
+    "majority_f1": 0.9673581894675758,
+    "prevalence": 0.9367799943804439,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 23.5
+  },
+  {
+    "source": "alpha",
+    "target": "otc",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.5079465773511965,
+    "auc_std": 0.09650545777904579,
+    "mcc_mean": 0.0036486109269258083,
+    "f1_mean": 0.9604637362760001,
+    "majority_f1": 0.9673581894675758,
+    "prevalence": 0.9367799943804439,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 23.5
+  },
+  {
+    "source": "otc",
+    "target": "epinions",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.7072398695410856,
+    "auc_std": 0.04852595019237656,
+    "mcc_mean": 0.1568194952590142,
+    "f1_mean": 0.8644877013510578,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 169.3
+  },
+  {
+    "source": "otc",
+    "target": "epinions",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.515938114950042,
+    "auc_std": 0.01997132906786856,
+    "mcc_mean": -0.02708043032308209,
+    "f1_mean": 0.747778779669143,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 169.3
+  },
+  {
+    "source": "alpha",
+    "target": "epinions",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.638684224383476,
+    "auc_std": 0.14220153387819912,
+    "mcc_mean": 0.09218580119144382,
+    "f1_mean": 0.8367982322703301,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 220.2
+  },
+  {
+    "source": "alpha",
+    "target": "epinions",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.5172276114745712,
+    "auc_std": 0.03612400409726922,
+    "mcc_mean": -0.03729526307181907,
+    "f1_mean": 0.7103628311028731,
+    "majority_f1": 0.9046230357631069,
+    "prevalence": 0.825855450039816,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 220.2
+  },
+  {
+    "source": "otc",
+    "target": "wikirfa",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.48938125914658515,
+    "auc_std": 0.00835541585221386,
+    "mcc_mean": -0.025824468438904725,
+    "f1_mean": 0.8088296599352649,
+    "majority_f1": 0.8680310046639779,
+    "prevalence": 0.7668328445747801,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 171.8
+  },
+  {
+    "source": "otc",
+    "target": "wikirfa",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.4362426341513093,
+    "auc_std": 0.060379246367841755,
+    "mcc_mean": -0.12436393340476552,
+    "f1_mean": 0.564606652944922,
+    "majority_f1": 0.8680310046639779,
+    "prevalence": 0.7668328445747801,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 171.8
+  },
+  {
+    "source": "alpha",
+    "target": "wikirfa",
+    "method": "ye_tradaboost",
+    "auc_mean": 0.4903766336078099,
+    "auc_std": 0.013158694985347934,
+    "mcc_mean": 0.08086486343189792,
+    "f1_mean": 0.8677671534658248,
+    "majority_f1": 0.8680310046639779,
+    "prevalence": 0.7668328445747801,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 141.8
+  },
+  {
+    "source": "alpha",
+    "target": "wikirfa",
+    "method": "ye_source_only_lr",
+    "auc_mean": 0.44218113886802274,
+    "auc_std": 0.014664536135088804,
+    "mcc_mean": -0.09710719098567287,
+    "f1_mean": 0.5830572235735508,
+    "majority_f1": 0.8680310046639779,
+    "prevalence": 0.7668328445747801,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "wall_s": 141.8
+  }
+]
