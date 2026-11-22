@@ -130,6 +130,7 @@ def main():
             out.append(f"% {k}: CI<0 on {sum(targets[t][k]['vs_tlr']['hi'] < 0 for t in tt.GRAPHS)} of 6 targets; "
                        f"mean d {np.mean([targets[t][k]['vs_tlr']['delta'] for t in tt.GRAPHS]):+.3f}")
         triage_rows(targets, pairs, out)
+        families_rows(out)
     open(os.path.join(R, "tables.txt"), "w").write("\n".join(out) + "\n")
     print("\n".join(out))
 
@@ -155,6 +156,21 @@ def triage_rows(targets, pairs, out):
         cells = [lift(targets[t]["T-deg"]), lift(targets[t]["T-rep"]), lift(targets[t]["T-LR"]), mean, lift(got[best])]
         out.append(f"{SHORT[t]} & {base:.3f} & " + " & ".join(f"{a:.1f} / {b:.1f}" for a, b in cells)
                    + f" & {SHORT[best]} \\\\")
+
+
+
+def families_rows(out):
+    """Table 3 bottom block: mean transfer AUC over the five sources / target-only AUC, per feature group."""
+    fam = load("families.json")
+    if not fam:
+        return
+    out.append("% families: target | activity | neighbourhood | reputation | all (mean transfer / target-only)")
+    for t in tt.GRAPHS:
+        cells = []
+        for g in ("activity", "neighbourhood", "reputation", "all"):
+            m = np.mean([fam["pairs"][f"{s}->{t}"][g] for s in tt.GRAPHS if s != t])
+            cells.append(f"{m:.3f}/{fam['target_only'][t][g]:.3f}")
+        out.append(f"% families {t}: " + " ".join(cells))
 
 
 if __name__ == "__main__":

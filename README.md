@@ -69,11 +69,12 @@ bash run_all.sh
 |---------------|--------------------------------|----------------------|--------------|
 | Table 1, Fig. 2c, Check 3 | `exp_data.py` | `data_audit.json` | 30 s |
 | Check 2 (construction choices) | `exp_construction.py` | `construction.json` | 1 min |
-| Table 2, Figs. 2a–b, 3, 4a, 5b, Table 3 | `exp_transfer.py` | `transfer.json`, `targets.json` | 2–3 h |
+| Table 2, Figs. 2a–b, 3, 4a, 5b, Table 4 | `exp_transfer.py` | `transfer.json`, `targets.json` | 2–3 h |
 | GNN and GNN+DGI rows, T-GNN | `exp_gnn.py` | `gnn.json` | 1 h (GPU) |
+| Table 3 (transfer AUC per pair and feature group) | `exp_families.py` | `families.json` | 10 min |
 | Fig. 4b (label budget) | `exp_budget.py` | `budget.json` | 30 min |
 | Fig. 5a (positive control) | `exp_control.py 0.4`, `exp_control.py` | `control_h0.4.json`, `control.json` | 30 min each |
-| Table 4 (Ye et al.) | `ye2013/experiment_ye2013.py` | `ye2013/ye2013_transfer.json` | several hours |
+| Table 5 (Ye et al.) | `ye2013/experiment_ye2013.py` | `ye2013/ye2013_transfer.json` | several hours |
 | All numbers | `make_tables.py` | `tables.txt` | seconds |
 | Figures 2–5 | `fig_*.py` | `../figures/*.pdf` | seconds |
 

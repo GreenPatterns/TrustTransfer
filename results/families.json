@@ -1,0 +1,222 @@
+{
+ "pairs": {
+  "alpha->otc": {
+   "activity": 0.7580848830233953,
+   "neighbourhood": 0.5438605612210892,
+   "reputation": 0.513006065453576,
+   "all": 0.8423255348930214
+  },
+  "epinions->otc": {
+   "activity": 0.6706806971938946,
+   "neighbourhood": 0.451751316403386,
+   "reputation": 0.6077084583083383,
+   "all": 0.6471868959541425
+  },
+  "slashdot->otc": {
+   "activity": 0.6102041258414984,
+   "neighbourhood": 0.5059611411051123,
+   "reputation": 0.6075351596347397,
+   "all": 0.6858285009664734
+  },
+  "wikirfa->otc": {
+   "activity": 0.6142549823368659,
+   "neighbourhood": 0.4471329067519829,
+   "reputation": 0.4705755515563554,
+   "all": 0.547624808371659
+  },
+  "reddit->otc": {
+   "activity": 0.5605277277877758,
+   "neighbourhood": 0.5110921149103512,
+   "reputation": 0.6017176564687062,
+   "all": 0.6091168432980071
+  },
+  "otc->alpha": {
+   "activity": 0.7549860016099629,
+   "neighbourhood": 0.5141493240523711,
+   "reputation": 0.6549115704240358,
+   "all": 0.85456989724649
+  },
+  "epinions->alpha": {
+   "activity": 0.6672667033643488,
+   "neighbourhood": 0.4626704666524611,
+   "reputation": 0.5885893884508843,
+   "all": 0.609672058858347
+  },
+  "slashdot->alpha": {
+   "activity": 0.5350736617183985,
+   "neighbourhood": 0.4853845561948055,
+   "reputation": 0.615146376399839,
+   "all": 0.6654614141629377
+  },
+  "wikirfa->alpha": {
+   "activity": 0.5993597142315978,
+   "neighbourhood": 0.46423899661434287,
+   "reputation": 0.4065037763098705,
+   "all": 0.4447529713284561
+  },
+  "reddit->alpha": {
+   "activity": 0.49523152094135475,
+   "neighbourhood": 0.5039080071974809,
+   "reputation": 0.6398803182044179,
+   "all": 0.6399535655941473
+  },
+  "otc->epinions": {
+   "activity": 0.5495235464307716,
+   "neighbourhood": 0.35495413723951297,
+   "reputation": 0.8389167133515969,
+   "all": 0.5717581715177895
+  },
+  "alpha->epinions": {
+   "activity": 0.5328570299794569,
+   "neighbourhood": 0.4566203113140058,
+   "reputation": 0.4075239233233612,
+   "all": 0.49478346465598944
+  },
+  "slashdot->epinions": {
+   "activity": 0.5639953727581929,
+   "neighbourhood": 0.48750153206460745,
+   "reputation": 0.8551916000252863,
+   "all": 0.8788048937556404
+  },
+  "wikirfa->epinions": {
+   "activity": 0.6515665762623164,
+   "neighbourhood": 0.6836373741782369,
+   "reputation": 0.15280207721349268,
+   "all": 0.5069541742341104
+  },
+  "reddit->epinions": {
+   "activity": 0.4656693518922357,
+   "neighbourhood": 0.361253798077312,
+   "reputation": 0.8412435895475745,
+   "all": 0.8093233173591737
+  },
+  "otc->slashdot": {
+   "activity": 0.5657726752161012,
+   "neighbourhood": 0.49620374139228435,
+   "reputation": 0.6893527083927281,
+   "all": 0.5434680635733838
+  },
+  "alpha->slashdot": {
+   "activity": 0.5604866756743399,
+   "neighbourhood": 0.5409473296167291,
+   "reputation": 0.42655967694230235,
+   "all": 0.5565462281163945
+  },
+  "epinions->slashdot": {
+   "activity": 0.5366784370202099,
+   "neighbourhood": 0.5574905106304467,
+   "reputation": 0.7129413385961744,
+   "all": 0.6958791688689598
+  },
+  "wikirfa->slashdot": {
+   "activity": 0.5265434768538991,
+   "neighbourhood": 0.5268935090749922,
+   "reputation": 0.3208476804287737,
+   "all": 0.5022903190022134
+  },
+  "reddit->slashdot": {
+   "activity": 0.5737650191296302,
+   "neighbourhood": 0.48736283748262155,
+   "reputation": 0.6944071802198326,
+   "all": 0.6903064606813324
+  },
+  "otc->wikirfa": {
+   "activity": 0.47803767331673824,
+   "neighbourhood": 0.3819336147287661,
+   "reputation": 0.5622828336760586,
+   "all": 0.625521808146037
+  },
+  "alpha->wikirfa": {
+   "activity": 0.46059425424197603,
+   "neighbourhood": 0.4795308921678271,
+   "reputation": 0.40488421179215217,
+   "all": 0.5769042389696598
+  },
+  "epinions->wikirfa": {
+   "activity": 0.5485806173863896,
+   "neighbourhood": 0.6379967868008707,
+   "reputation": 0.540230114121481,
+   "all": 0.6737075772334259
+  },
+  "slashdot->wikirfa": {
+   "activity": 0.5020683814952439,
+   "neighbourhood": 0.5039503300984884,
+   "reputation": 0.546388065947545,
+   "all": 0.6340588765828493
+  },
+  "reddit->wikirfa": {
+   "activity": 0.4468140072393184,
+   "neighbourhood": 0.3903440095241531,
+   "reputation": 0.5853876017653354,
+   "all": 0.5810069026059141
+  },
+  "otc->reddit": {
+   "activity": 0.6037311012149449,
+   "neighbourhood": 0.6430204137128396,
+   "reputation": 0.7238000484169694,
+   "all": 0.49172444993836306
+  },
+  "alpha->reddit": {
+   "activity": 0.6060055628794672,
+   "neighbourhood": 0.6162895033611511,
+   "reputation": 0.34211362919347954,
+   "all": 0.495303854480273
+  },
+  "epinions->reddit": {
+   "activity": 0.4592751636749008,
+   "neighbourhood": 0.39955597529995523,
+   "reputation": 0.577225956480889,
+   "all": 0.4958905494802171
+  },
+  "slashdot->reddit": {
+   "activity": 0.6688204996693615,
+   "neighbourhood": 0.6083448910407416,
+   "reputation": 0.5915518369179362,
+   "all": 0.6524454599136489
+  },
+  "wikirfa->reddit": {
+   "activity": 0.3965888506196277,
+   "neighbourhood": 0.3680760832628531,
+   "reputation": 0.533819650463512,
+   "all": 0.47419514556626324
+  }
+ },
+ "target_only": {
+  "otc": {
+   "activity": 0.7510922815436912,
+   "neighbourhood": 0.599500099980004,
+   "reputation": 0.49513197360527894,
+   "all": 0.7787392521495701
+  },
+  "alpha": {
+   "activity": 0.7728272900537444,
+   "neighbourhood": 0.5387352913322443,
+   "reputation": 0.5811773445083694,
+   "all": 0.732285229774842
+  },
+  "epinions": {
+   "activity": 0.7400535834060074,
+   "neighbourhood": 0.6812367631775688,
+   "reputation": 0.8637800460799312,
+   "all": 0.8932873536356889
+  },
+  "slashdot": {
+   "activity": 0.5793801036213648,
+   "neighbourhood": 0.5697132964642835,
+   "reputation": 0.7057303091322932,
+   "all": 0.7305041564905594
+  },
+  "wikirfa": {
+   "activity": 0.6593095421912767,
+   "neighbourhood": 0.6370891590605722,
+   "reputation": 0.602165181524105,
+   "all": 0.7311517563163654
+  },
+  "reddit": {
+   "activity": 0.6834292151878428,
+   "neighbourhood": 0.6686083972291598,
+   "reputation": 0.7533033393582084,
+   "all": 0.760156505968462
+  }
+ }
+}
