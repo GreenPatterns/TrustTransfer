@@ -1,7 +1,9 @@
-"""Inductive relational GNN transfer, with and without multi-platform DGI
-pretraining (reviewer R1.3, R2.5), a signed GCN (SGCN), plus the target-only
-models as in-domain references (R3.3). Writes gnn.json (batch) or strict/gnn.json.
-Argument: comma-separated models (default GNN,GNN-DGI) and an output name."""
+"""Inductive relational GNN transfer, with and without Deep Graph Infomax
+pretraining on the source's own unlabeled graph (single-source, as every method
+in the main comparison), a signed GCN (SGCN), plus the target-only models as
+in-domain references. Writes gnn.json (batch) or strict/gnn.json; entries of models
+not run are kept. Argument: comma-separated models (default GNN,GNN-DGI) and an
+output name."""
 import json
 import os
 import sys
@@ -27,9 +29,9 @@ def inputs(g, c):
 
 def main(models, out_name):
     gi = {n: inputs(tt.load(n), E.cached(n)) for n in tt.GRAPHS}
-    # unlabeled graphs for DGI: what each platform shows at scoring time (strict: the prefix graph)
-    pretrain = [gi[n]["test"][0] if E.STRICT else gi[n]["test"] for n in tt.GRAPHS]
-    t_lr, out = {}, {"pairs": {}, "targets": {}}
+    path = os.path.join(E.OUT, out_name)
+    out = json.load(open(path)) if os.path.exists(path) else {"pairs": {}, "targets": {}}
+    t_lr = {}
     for t in tt.GRAPHS:
         c = E.cached(t)
         t_lr[t] = tt.fit_predict("lr", E.zs(c["tfit_x"], E.ALL), c["tfit_y"], E.zt(c, E.ALL))
@@ -44,14 +46,15 @@ def main(models, out_name):
         targets = [t for t in tt.GRAPHS if t != s]
         tests = [gi[t]["test"] for t in targets]
         for name in models:
-            pre = pretrain if name == "GNN-DGI" else None
+            # DGI reads only the source's unlabeled training graph(s): no target or third-party data
+            pre = deep._parts(gi[s]["src"]) if name == "GNN-DGI" else None
             runs = [deep.gnn(gi[s]["src"], tests, sd, pretrain=pre, kind=KIND[name]) for sd in SEEDS]
             for k, t in enumerate(targets):
                 c = E.cached(t)
                 score = E.ensemble([r[k] for r in runs])
                 out["pairs"].setdefault(f"{s}->{t}", {})[name] = E.summarise(score, c["test_y"], t_lr[t], c["test_r"])
             print(s, name, {t: round(out["pairs"][f"{s}->{t}"][name]["auc"], 3) for t in targets}, flush=True)
-        json.dump(out, open(os.path.join(E.OUT, out_name), "w"), indent=1)
+        json.dump(out, open(path, "w"), indent=1)
 
 
 if __name__ == "__main__":

@@ -20,10 +20,10 @@ GBDT & 0.571 & -0.137 [-0.200, -0.081] & 0 & 24 & ts -0.118 & fo -0.175 & btc [-
 CORAL & 0.579 & -0.128 [-0.236, -0.029] & 3 & 23 & ts -0.090 & fo -0.206 & btc [0.09, 0.087] & same +0.031 & other -0.153 & lopo [-0.178 w/o otc, -0.092 w/o wikirfa] \\
 DANN & 0.598 & -0.110 [-0.201, -0.025] & 3 & 22 & ts -0.086 & fo -0.159 & btc [0.086, 0.099] & same +0.030 & other -0.132 & lopo [-0.149 w/o otc, -0.085 w/o reddit] \\
 GNN & 0.608 & -0.100 [-0.186, +0.002] & 3 & 19 & ts -0.071 & fo -0.157 & btc [0.081, 0.117] & same +0.051 & other -0.123 & lopo [-0.135 w/o otc, -0.063 w/o wikirfa] \\
-GNN-DGI & 0.618 & -0.090 [-0.163, -0.006] & 3 & 20 & ts -0.066 & fo -0.138 & btc [0.101, 0.115] & same +0.055 & other -0.112 & lopo [-0.119 w/o otc, -0.058 w/o wikirfa] \\
+GNN-DGI & 0.615 & -0.093 [-0.167, +0.003] & 3 & 20 & ts -0.068 & fo -0.144 & btc [0.109, 0.137] & same +0.063 & other -0.117 & lopo [-0.124 w/o otc, -0.057 w/o wikirfa] \\
 SGCN & 0.615 & -0.093 [-0.175, -0.003] & 3 & 18 & ts -0.066 & fo -0.147 & btc [0.095, 0.126] & same +0.058 & other -0.116 & lopo [-0.125 w/o otc, -0.055 w/o wikirfa] \\
-Pooled-LR & 0.666 & -0.042 [-0.106, +0.027] & 1 & 4 (of 6 targets) & per target OTC +0.104 Alpha -0.027 Epin. -0.048 Slash. -0.044 RfA -0.173 Reddit -0.061 \\
-V-REx & 0.644 & -0.064 [-0.107, -0.015] & 0 & 4 (of 6 targets) & per target OTC +0.049 Alpha -0.052 Epin. -0.041 Slash. -0.090 RfA -0.120 Reddit -0.130 \\
+Pooled-LR & 0.666 & -0.042 [-0.106, +0.027] & 1 & 4 (of 6 targets) & ts -0.039 & fo -0.046 & per target OTC +0.104 Alpha -0.027 Epin. -0.048 Slash. -0.044 RfA -0.173 Reddit -0.061 \\
+V-REx & 0.644 & -0.064 [-0.107, -0.015] & 0 & 4 (of 6 targets) & ts -0.063 & fo -0.066 & per target OTC +0.049 Alpha -0.052 Epin. -0.041 Slash. -0.090 RfA -0.120 Reddit -0.130 \\
 % [forecast] transfer AUC (LR, all features); rows sources, columns targets; * = CI>0 vs T-LR
 OTC & -- & \textbf{0.665} & 0.732 & 0.580 & 0.587 & 0.607 \\
 Alpha & \textbf{0.663} & -- & 0.514 & 0.536 & 0.521 & 0.522 \\
@@ -107,10 +107,10 @@ GBDT & 0.591 & -0.180 [-0.249, -0.121] & 0 & 28 & ts -0.186 & fo -0.167 & btc [0
 CORAL & 0.612 & -0.159 [-0.226, -0.079] & 2 & 28 & ts -0.143 & fo -0.191 & btc [0.128, 0.061] & same +0.030 & other -0.188 & lopo [-0.185 w/o slashdot, -0.141 w/o epinions] \\
 DANN & 0.608 & -0.163 [-0.241, -0.087] & 2 & 28 & ts -0.154 & fo -0.181 & btc [0.073, 0.069] & same +0.019 & other -0.191 & lopo [-0.193 w/o slashdot, -0.139 w/o epinions] \\
 GNN & 0.613 & -0.158 [-0.230, -0.087] & 0 & 27 & ts -0.151 & fo -0.172 & btc [0.036, 0.027] & same +0.015 & other -0.184 & lopo [-0.183 w/o slashdot, -0.140 w/o epinions] \\
-GNN-DGI & 0.628 & -0.143 [-0.227, -0.070] & 1 & 27 & ts -0.138 & fo -0.153 & btc [0.045, 0.026] & same +0.019 & other -0.167 & lopo [-0.168 w/o slashdot, -0.122 w/o epinions] \\
+GNN-DGI & 0.609 & -0.162 [-0.235, -0.080] & 0 & 25 & ts -0.152 & fo -0.181 & btc [0.018, 0.02] & same +0.008 & other -0.188 & lopo [-0.186 w/o slashdot, -0.146 w/o epinions] \\
 SGCN & 0.623 & -0.148 [-0.207, -0.068] & 1 & 27 & ts -0.145 & fo -0.154 & btc [0.092, 0.024] & same -0.007 & other -0.170 & lopo [-0.164 w/o otc, -0.120 w/o wikirfa] \\
-Pooled-LR & 0.690 & -0.081 [-0.103, -0.059] & 0 & 6 (of 6 targets) & per target OTC -0.109 Alpha -0.063 Epin. -0.036 Slash. -0.075 RfA -0.090 Reddit -0.116 \\
-V-REx & 0.666 & -0.105 [-0.145, -0.065] & 0 & 5 (of 6 targets) & per target OTC -0.140 Alpha -0.035 Epin. -0.040 Slash. -0.104 RfA -0.132 Reddit -0.177 \\
+Pooled-LR & 0.690 & -0.081 [-0.103, -0.059] & 0 & 6 (of 6 targets) & ts -0.094 & fo -0.055 & per target OTC -0.109 Alpha -0.063 Epin. -0.036 Slash. -0.075 RfA -0.090 Reddit -0.116 \\
+V-REx & 0.666 & -0.105 [-0.145, -0.065] & 0 & 5 (of 6 targets) & ts -0.121 & fo -0.072 & per target OTC -0.140 Alpha -0.035 Epin. -0.040 Slash. -0.104 RfA -0.132 Reddit -0.177 \\
 % [batch] transfer AUC (LR, all features); rows sources, columns targets; * = CI>0 vs T-LR
 OTC & -- & \textbf{0.855} & 0.572 & 0.543 & 0.626 & 0.492 \\
 Alpha & \textbf{0.842} & -- & 0.495 & 0.557 & 0.577 & 0.495 \\

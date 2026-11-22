@@ -9,7 +9,8 @@ the target's first 20% of ratings. Every learner sees exactly these labels:
   ZS-LR     source logistic regression, no target labels (zero-shot)
   WS-LR     warm start: target LR whose L2 penalty pulls the weights toward the
             source weights instead of zero (MAP adaptation, Chelba and Acero 2006)
-  Pool-LR   one LR on source and target ratings, the two platforms weighted equally
+  Pool-LR   "joint LR" in the paper: one LR on source and target ratings, the two
+            platforms weighted equally
             (a fixed class-stratified sample of POOL_ROWS source ratings, for speed)
   WS-GBDT   source gradient boosting continued with 50 trees on the target labels
 

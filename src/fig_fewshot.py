@@ -9,7 +9,7 @@ from plot_style import C_REF, SHORT, WIDTH, load, plt, save
 import tt
 
 METHODS = (("ZS-LR", "#ff7f0e", "zero-shot LR"), ("WS-LR", "#1f77b4", "warm-start LR"),
-           ("Pool-LR", "#2ca02c", "pooled LR"), ("WS-GBDT", "#9467bd", "warm-start GBDT"))
+           ("Pool-LR", "#2ca02c", "joint LR"), ("WS-GBDT", "#9467bd", "warm-start GBDT"))
 
 
 def main(name="strict/fewshot.json", out="fewshot"):

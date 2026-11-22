@@ -96,8 +96,9 @@ def method_rows(c, out, tag):
         mu, lo, hi = target_boot(d)
         loss = sum(c["targets"][t][m]["vs_tlr"]["hi"] < 0 for t in tt.GRAPHS)
         win = sum(c["targets"][t][m]["vs_tlr"]["lo"] > 0 for t in tt.GRAPHS)
+        ts, fo = np.mean([d[t] for t in TIMESTAMPED]), np.mean([d[t] for t in FILE_ORDER])
         out.append(f"{m} & {np.mean([c['targets'][t][m]['auc'] for t in tt.GRAPHS]):.3f} & {mu:+.3f} "
-                   f"[{lo:+.3f}, {hi:+.3f}] & {win} & {loss} (of 6 targets) & per target "
+                   f"[{lo:+.3f}, {hi:+.3f}] & {win} & {loss} (of 6 targets) & ts {ts:+.3f} & fo {fo:+.3f} & per target "
                    + " ".join(f"{SHORT[t]} {d[t]:+.3f}" for t in tt.GRAPHS) + " \\\\")
 
 
